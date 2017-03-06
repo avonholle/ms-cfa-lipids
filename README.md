@@ -16,7 +16,7 @@ Confirmatory factor analysis (CFA) of multivariate lipid distributions across ti
         - Open Mplus
         - Open Windows File Explorer
             - Type in %userprofile% to get to folder Mplus access on the remote site
-                    - Note: I had to contact support on 9/23/2016. A special version of R on virtuallab was set up for me to be able to call Mplus in virtuallab.
+                - Note: I had to contact support on 9/23/2016. A special version of R on virtuallab was set up for me to be able to call Mplus in virtuallab.
             - Open new file explorer and open local folder specified in [Template for model 1](mplus/compare-years-template/template_m1.txt), currently 'C:/temp/models2'.
             - Transfer .inp files from c:/temp/models2/ local folder to remote folder so can run MPlus program in virtuallab.unc.edu
         - Open R in virtuallab.unc.edu and run [run-models.R](run-models.R). This will run all the Mplus programs one after another.
