@@ -20,6 +20,8 @@ Confirmatory factor analysis (CFA) of multivariate lipid distributions across ti
             - Transfer .inp files from c:/temp/models2/ local folder to remote folder so can run MPlus program in virtuallab.unc.edu
         - Open R in virtuallab.unc.edu and run [run-models.R](run-models.R). This will run all the Mplus programs one after another.
         - Got to remote folder and transfer the .out files to the local folder to save the Mplus output.
+    - Take Mplus output and read in all output using extractModelParameters and extractModelSummaries functions in MplusAutomation in the [mplus-results.Rmd](mplus-results.Rmd) program.
+    - Make tables in R with the Mplus results now in R data frame formats.
             
         
         
