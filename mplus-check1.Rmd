@@ -1,0 +1,90 @@
+---
+title: "Mplus: sensitivity analysis for useobservations vs subpopulation command"
+author: "Ann Von Holle"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+bibliography: lit.bib
+output:
+  html_document:
+        toc: yes
+        toc_float: yes
+        number_sections: true
+---
+
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}  
+
+library(knitr)
+opts_chunk$set(fig.width=10, fig.height=10, 
+               fig.keep = 'all',
+               fig.align="left", 
+               echo=F, results='hide',
+               warning=FALSE, message=FALSE, comment=NA)
+
+library("MplusAutomation")
+library(data.table)
+```
+
+<!-- Run mplusautomate package to extract results from mplus output, .out 
+ See https://cran.r-project.org/web/packages/MplusAutomation/vignettes/Vignette.pdf
+-->
+
+```{r}
+# run analyses with subpopulation (no grouping)
+
+runModels('C:/Users/vonholle/Dropbox/unc.grad.school/my-papers/ms-201608-2/programs-ms201608-2/mplus/sensitivity', replaceOutfile="never")
+
+```
+
+
+```{r}
+# read in parameter estimates from model using subpopulation and useobservatios options.
+
+# extract out all parameters from output
+sub.params <- extractModelParameters("C:/Users/vonholle/Dropbox/unc.grad.school/my-papers/ms-201608-2/programs-ms201608-2/mplus/sensitivity", recursive=TRUE)
+
+names(sub.params)
+names(sub.params) = c("sub", "use") # rename to shorter name
+
+
+```
+
+```{r}
+# Compare model parameters (and se). Look for differences.
+
+names(sub.params$sub$unstandardized)
+sub = data.frame(sub.params$sub$unstandardized)
+use = data.frame(sub.params$use$unstandardized)
+  
+sub
+
+# make a new value to put in table: est (se)
+sub = within(sub, {
+  est.se = paste0(est, " (", se, ")")
+  option="sub"
+})
+
+use = within(use, {
+  est.se = paste0(est, " (", se, ")")
+  option="use"
+})
+
+tot = rbind(sub, use)
+
+pct.diff.se = 100*((use$se - sub$se)/sub$se)
+
+t1 = data.table(dcast(setDT(tot), paramHeader + param ~ option, 
+                      value.var = "est.se"))
+
+t1$pct.diff.se = round(pct.diff.se,2)
+t1
+
+colnames(t1) = c("parameter", "lipid indicator", "est(se) from sub", 
+                 "est(se) from use", "% diff se")
+```
+
+# Table comparing parameter results using SUBPOPULATION option in complex design versus USEOBSERVATIONS option. 
+
+```{r, results='markup'}
+  kable(t1)
+```
+
+Problem with complex design and GROUPING option: To determine measurement invariance I need to use the grouping option. However, with you can't use the SUBPOPULATION option and GROUPING command together. So I am checking to see if there is a big difference when using useobservations instead of subpopulation. Based on findings in table there is not a big difference. If anything the standard errors appear to be slightly larger if there is any chance at all.

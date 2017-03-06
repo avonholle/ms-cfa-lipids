@@ -1,0 +1,513 @@
+% ser-2017-aha-slcs.Rnw
+
+%---------------------------------------------------------------
+% Preamble
+% --------------------------------------------------------------
+%
+% NOTE: See rice-sample.tex written by Daina Chiba at Rice University for formatting and preamble code that I copied, http://ricebeamer.dynaman.net/
+\documentclass[pdf]{beamer}
+
+\usetheme{Frankfurt}
+\usecolortheme{beetle}
+\setbeamersize{text margin left=10pt,text margin right=10pt} %set margin sizes
+
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{bm}
+\usepackage{blindtext}
+\usepackage{scrextend}
+\addtokomafont{labelinglabel}{\sffamily}
+\usepackage{csquotes}
+\usepackage{booktabs}
+\usepackage{caption}
+
+\usepackage{graphicx}% http://ctan.org/pkg/graphicx
+
+\setbeamercolor{bibliography entry title}{fg=black,bg=black}% see http://tex.stackexchange.com/questions/71352/beamer-undefined-color-local-structure
+\setbeamercolor{bibliography entry location}{fg=white}
+\setbeamercolor{bibliography entry note}{fg=white}
+\setbeamertemplate{caption}[numbered]
+
+% got from http://tex.stackexchange.com/questions/48023/mimic-bibtex-apalike-with-biblatex-biblatex-apa-broken
+\PassOptionsToPackage{
+        style=numeric,
+        hyperref=true,
+        backend=bibtex,
+        maxbibnames=1,
+        firstinits=true,
+        uniquename=init,
+        maxcitenames=2,
+        parentracker=true,
+        url=false,
+        doi=true,
+        isbn=false,
+        eprint=false,
+        backref=false,
+            }{biblatex}
+% see the following link for info on biblatex sort order issue: 
+% http://tex.stackexchange.com/questions/51434/biblatex-citation-order
+\usepackage[natbib=true, sorting=none, style=numeric, backend=biber]{biblatex}
+\addbibresource{bib1}
+\renewcommand*{\bibfont}{\scriptsize}
+
+
+% see http://tex.stackexchange.com/questions/43083/author-year-abbr-journal-name-as-citation-style
+\DeclareCiteCommand{\longcite}{(}{%
+    \printnames[author]{author}, \printfield{year})}{}{}%
+
+\newcommand{\customcite}[1]{\citeauthor{#1}, \citetitle{#1}, \citeyear{#1}}
+\newcommand{\customcitetwo}[1]{\citeauthor{#1}, \citeyear{#1}}
+
+\renewcommand{\footnotesize}{\tiny}  % change font size of citation
+\renewcommand\multicitedelim{\addsemicolon\space} % This doesn't seem to work, but see http://tex.stackexchange.com/questions/167665/multiple-references-with-footfullcite
+
+
+
+%\usepackage{fontspec} % have to compile with XeLaTeX
+%\setmainfont{Arial}
+\usepackage[T1]{fontenc}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault} % get something like Arial
+
+\usepackage{amsmath,amsthm, amssymb, latexsym}
+\usepackage{wrapfig}
+
+\usepackage{array,booktabs,tabularx}
+\newcolumntype{Z}{>{\centering\arraybackslash}X} % centered tabularx columns
+
+\usepackage[shortlabels]{enumitem}
+% \setlist[description]{style=nextline}
+\setlist[itemize]{leftmargin=0.3in, labelindent=16pt, label=$\Diamond$}
+
+% set bullet points in itemize
+% see http://tex.stackexchange.com/questions/184080/using-beamer-bullets-in-poster
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,decorations.markings,snakes,shapes}
+\tikzset{
+font={\fontsize{14pt}{16}\selectfont}}
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{colortbl}
+\usepackage{adjustbox}
+
+\usepackage[framemethod=TikZ]{mdframed}
+\mdfdefinestyle{MyFrame}{%
+    linecolor=carolinablue,
+    outerlinewidth=4pt,
+    roundcorner=20pt,
+    innerrightmargin=20pt,
+    innerleftmargin=20pt,
+    backgroundcolor=gray!10!white}
+
+% set three column widths in poster
+\newlength{\columnheight}
+\setlength{\columnheight}{105cm}
+\newlength{\sepwid}
+\newlength{\onecolwid}
+\newlength{\twocolwid}
+\newlength{\threecolwid}
+\setlength{\sepwid}{0.024\paperwidth}
+\setlength{\onecolwid}{0.31\paperwidth}
+\setlength{\twocolwid}{0.31\paperwidth}
+\setlength{\threecolwid}{0.31\paperwidth}
+
+<<mainSettings, echo=FALSE, include=FALSE>>=
+opts_chunk$set(echo=F, comment=NA, message=T, results = 'hide', cache=F)
+
+library(knitr)
+library(data.table)
+library(readxl)
+library(ggplot2)
+library(plyr)
+library("MplusAutomation")
+library(ztable)
+options(ztable.type="latex")
+library(Hmisc)
+library(htmlTable)
+@
+
+
+% --------------------------------------------------------------------------------------% 
+% Title, author, date, etc.
+% --------------------------------------------------------------------------------------% 
+% see http://tex.stackexchange.com/questions/9740/how-can-i-add-vertical-space-to-a-beamercolorbox-to-make-it-align-with-another-o
+\title{Confirmatory factor analysis (CFA) of multivariate lipid distributions across time and race-ethnic groups: United States, 2003-2012} 
+\author[vonholle@unc.edu]{Ann Von Holle, Kari E. North, UNC, Chapel Hill, NC}
+\institute{UNC, Chapel Hill}
+\titlegraphic{\includegraphics[scale=0.25]{unc-logo.png}} %this is the path to your logo
+
+% -------------------------------------------------------------------------------------%
+% Contents
+% -------------------------------------------------------------------------------------%
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\centering
+\end{frame}
+
+% \itemsep0.3em
+\section{Introduction}
+\subsection{Introduction}
+        
+\begin{frame}{Introduction}
+          \begin{itemize}
+          \normalsize  
+          \item  High density lipoprotein cholesterol (HDL-C), low density lipoprotein cholesterol (LDL-C) and triglycerides (TG) are common measures of dyslipidemia.
+              \begin{itemize}
+                \normalsize \item Common analytic practice includes separate evaluations of each lipoprotein when evaluating dyslipidemia. 
+                \item An alternative is to specify one latent factor, which predicts lipid values and incorporates their covariance structure.
+                \end{itemize}
+            \item Before using the latent factor, important to determine if underlying structure of dyslipidemia construct is similar across groups (measurement invariance). 
+            \begin{itemize}
+              \normalsize \item For example, do racial/ethnic groups have the same construct?
+              \end{itemize}
+            \end{itemize}
+\end{frame}
+
+        \section{Aims}
+        \subsection{Aims}
+        
+        \begin{frame}{Aims}
+        
+          \begin{description}
+          \item[Aim 1] Estimate dyslipidemia in a U.S. representative sample (NHANES) as one latent factor with three indicators (HDL-C, LDL-C, TG) via confirmatory factor analysis (CFA).
+            \item[Aim 2] Test similarity of latent factor parameters (measurement invariance)  \footfullcite{van_de_schoot_checklist_2012} across age and racial/ethnic groups.
+            \end{description}
+
+        \end{frame}
+
+        
+        % -----------------------------------------------------------
+        % 1-3
+        % -----------------------------------------------------------
+        \section{Methods}
+        \subsection{Methods}
+        
+        % Figure showing{ CFA
+        % %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+\begin{frame}{Confirmatory Factor Analysis (CFA) Model}
+
+          \tikzset{
+            gla/.style={
+          , line width=0.5mm, arrows={-Stealth[angle=45:12pt, scale=1, black, fill=black]}}}
+          
+          \tikzset{
+            dgla/.style={
+          , line width=0.5mm, shorten >=1pt, arrows={Stealth-Stealth[angle=45:10pt, scale=1, black, fill=black]}}}
+
+          \tikzset{
+    ultra thin/.style= {line width=0.1pt},
+    very thin/.style=  {line width=0.2pt},
+    thin/.style=       {line width=0.4pt},% thin is the default
+    rec/.style=        {shape=rectangle, line width=0.5mm, draw},% thin is the default
+    semithick/.style=  {line width=0.6pt},
+    thick/.style=      {line width=0.8pt},
+    very thick/.style= {line width=1.2pt},
+    ultra thick/.style={line width=1.6pt}
+}
+
+\centering
+        \begin{figure}
+          	\begin{tikzpicture}
+          		\node[line width=0.5mm, draw, ellipse, minimum height=1cm] (dys) {\large Dyslipidemia};
+          		
+          		\node[above left=of dys, rec] (hdl) {\normalsize HDL-C};
+          		\node[above=of dys, rec] (ldl) {\normalsize LDL-C};
+          		\node[above right=of dys, rec] (tg) {\normalsize TG};
+
+          		\node[above=of hdl, draw=none, fill=none] (e1) {\normalsize $\epsilon_1$};
+          		\node[above=of ldl, draw=none, fill=none] (e2) {\normalsize $\epsilon_2$};
+          		\node[above=of tg, draw=none, fill=none] (e3) {\normalsize $\epsilon_3$};
+
+          		\draw [->, gla] (e1) to (hdl);
+          		\draw [->, gla] (e2) to (ldl);
+          		\draw [->, gla] (e3) to (tg);
+          		
+          		\draw [->, gla] (dys) to node [anchor=east] {\large$\lambda_1$} (hdl)  ;
+          		\draw [->, gla] (dys) to node [anchor=west] {\large$\lambda_2$} (ldl);
+          		\draw [->, gla] (dys) to node [anchor=west] {\large$\lambda_3$} (tg);
+          		\draw [<->, dgla, bend left=60]  (e1) to node [anchor=north] {\normalsize$\epsilon_{12}$} (e2);
+          	\end{tikzpicture}
+      \end{figure}
+\end{frame}
+
+
+\begin{frame}{Equations for CFA\footfullcite{brown_confirmatory_2015}}
+
+\centering
+% Equations here
+\begin{array}{rcl} 
+  \textrm{HDL-C} & = & \mu_1 + \lambda_1 \eta_1 + \epsilon_1 \\ 
+  \textrm{LDL-C} & = & \mu_2 + \lambda_2 \eta_1 + \epsilon_2 \\ 
+  \textrm{TG-C} & = & \mu_3 + \lambda_3 \eta_1 + \epsilon_3 \\ 
+\end{array}
+
+\vskip1em
+
+Parameters:
+\begin{mdframed}
+\begin{description}
+  \item[Factor loadings] $\lambda$, represent the association between lipids and the latent factor for dyslipidemia, $\eta_1$.
+  \item[Intercepts] $\mu$, represent the means of the indicators, lipids.
+  \end{description}
+\end{mdframed}
+  
+\end{frame}
+
+\begin{frame}{Four models$^a$}
+
+\begin{itemize}
+%see http://latex.wikia.com/wiki/List_of_LaTeX_symbols
+  \item[\Rightarrow]\normalsize Evaluate model fit across year and racial/ethnic groups in four models, holding different parameters constant.
+  \end{itemize}
+  
+\centering
+
+  \begin{description}[align=left]
+  \normalsize
+    \item [Model 1]\raggedright Test metric invariance: equal factor loadings but different intercepts across groups.
+    \item [Model 2]\raggedright Test intercept-only invariance: different factor loadings but equal intercepts across groups
+    \item [Model 3]\raggedright Test scalar invariance: equal factor loadings and equal intercepts across groups
+    \item [Model 4]\raggedright Full uniqueness invariance: equal loadings, intercept and variance across all groups
+  \end{description}
+
+\indent \raggedright \scriptsize $^a$  All models include body mass index (BMI) and age covarying with factor (not shown in figure).
+      \end{frame}
+
+
+        % -----------------------------------------------------------
+        % 2-2
+        % -----------------------------------------------------------
+      \section{Results, 12-19 years}
+      \subsection{Results, 12-19 years}
+ 
+        % Read in code from mplus results web page development
+
+        <<code1, cache=F>>=
+          read_chunk("../mplus_results.R")
+        @
+
+
+        <<read1, eval=F>>=
+          #NOTE: only run this as needed (with new data). Takes long time to run.
+        @
+        
+        <<data-handle1>>=
+        @
+
+        <<data-handle2>>=
+        @
+
+        <<fit1>>=
+        @
+
+% see http://tex.stackexchange.com/questions/94078/resize-table-and-caption
+\begin{frame}{Model fit information by groups}
+\centering
+
+\begin{minipage}[h]{1\textwidth}  
+        \begin{adjustbox}{width=\linewidth} 
+<<printz-1, results='asis', eval=T>>=
+        print(z,type="latex")
+        @
+        \end{adjustbox}
+\end{minipage}
+
+\end{frame}
+
+\begin{frame}{Best fit selections for racial/ethnic groups}
+
+\begin{itemize} 
+  \item Model 1, allowing intercepts to vary, offers best fit.
+    \begin{itemize} \normalsize
+      \item Acceptable levels include Root Mean Square Error of Approximation (RMSEA) < 0.05, Comparative Fit Index (CFI) = 0.95 and lowest Bayesian Information Criterion (BIC) of all models.
+      \end{itemize}
+    \item Evidence for metric noninvariance  ($\chi^2$(df)=155 (8), p-value<0.001) $\Rightarrow$ Cannot make meaningful comparisons across racially and ethnically diverse populations.
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Best fit selections for time groups}
+
+  \begin{itemize}
+    \item Model 1, allowing intercepts to vary, offers best fit.
+    \begin{itemize} \normalsize
+      \item RMSEA < 0.05 and lowest Bayesian Information Criterion (BIC) of all models.
+      \end{itemize}
+    \item Evidence for metric noninvariance ($\chi^2$(df)=155 (12), p-value<0.001)  $\Rightarrow$ Cannot make meaningful comparisons across time.
+    \end{itemize}
+\end{frame}
+  
+% Second table here
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+<<loadings1>>=
+@
+
+<<combo1>>=
+@
+
+<<print-combo-race,  warning=TRUE>>=
+@
+
+\begin{frame}{Model 1 standardized parameters by race/ethnic groups}
+
+\centering
+\begin{minipage}[h]{0.9\textwidth}                          % minipage spans half the textwidth
+        \begin{adjustbox}{width=\linewidth}  % can also use \linewidth or sth. else
+<<printz-3, results='asis', eval=T>>=
+        print(z,type="latex")
+        @
+        \end{adjustbox}
+\end{minipage}
+\end{frame}
+
+
+\begin{frame}{Latent factor characteristics by racial/ethnic groups}
+
+          \begin{itemize}
+            \item \underline{Factor loadings}: A one unit factor increase represents less favorable lipid value $\Rightarrow$ an increase in LDL-C (0.4) and TG (0.6) accompanied by a decrease in HDL ($\sim$ -0.6).
+            \item \underline{Intercepts}: Non-Hispanic Black group only one with positive HDL-C (0.132) and lowest TG (-1.078) relative to center of multivariate distribution.
+          \end{itemize}
+\end{frame}
+
+<<print-combo-year,  warning=TRUE>>=
+@
+
+\begin{frame}{Model 1 standardized parameters by year groups}
+
+\centering
+\begin{minipage}[h]{0.8\textwidth}                          % minipage spans half the textwidth
+        \begin{adjustbox}{width=\linewidth}  % can also use \linewidth or sth. else
+<<printz-4, results='asis', eval=T>>=
+        print(z,type="latex")
+        @
+        \end{adjustbox}
+\end{minipage}
+\end{frame}
+          
+          
+% NOTE: not enough space here for gender. Remove to allow more
+% discussion of results in poster. keep for slides
+
+\begin{frame}{Fit and parameters for groups by sex}
+
+\vskip-1em
+
+% Run code for gender groups (from mplus_results.R)
+<<fit-gender>>=
+@
+\centering
+\begin{adjustbox}{width=0.7\linewidth} 
+%\caption*{Model fit}
+<<printf-gender, results='asis', eval=T>>=
+        print(z,type="latex",
+              caption="Model fit")
+@
+\end{adjustbox}
+
+\vskip1em
+
+<<print-combo-gender>>=
+@
+\centering
+\begin{adjustbox}{width=0.7\linewidth}
+%\caption*{Model 1 parameters}
+<<printp-gender, results='asis', eval=T>>=
+        print(z,type="latex",
+              caption="Model 1 parameters")
+@
+\end{adjustbox}
+
+\vskip1em
+
+\raggedright \footnotesize Invariance testing indicates evidence for metric non-invariance when testing difference between a metric model (model 1) and a full invariance model (model 4) in which there are full equality constraints across groups ($\chi^2$ = 68.5 (df=2); p-value<0.001).
+
+% NOTE: below is column approach, but too small to read
+
+% \begin{columns}[T] % align columns
+% \begin{column}{.48\textwidth}
+% 
+% %Left Part -------------------
+% 
+% % Run code for gender groups (from mplus_results.R)
+% <<fit-gender>>=
+% @
+% \centering
+% \begin{minipage}[h]{1\textwidth}  
+% \begin{adjustbox}{width=\linewidth} 
+% %\caption*{Model fit}
+% <<printf-gender, results='asis', eval=T>>=
+%         print(z,type="latex",
+%               caption="Model fit")
+% @
+% \end{adjustbox}
+% \end{minipage}
+% 
+% 
+% \end{column}%
+% 
+% \hfill%
+% \begin{column}{.48\textwidth}
+% 
+% 
+% % Right Part --------------------
+% 
+% <<print-combo-gender>>=
+% @
+% \centering
+% \begin{minipage}[h]{1\textwidth}  
+% \begin{adjustbox}{width=\linewidth}
+% %\caption*{Model 1 parameters}
+% <<printp-gender, results='asis', eval=T>>=
+%         print(z,type="latex",
+%               caption="Model 1 parameters")
+% @
+% \end{adjustbox}
+% \end{minipage}
+% 
+% \end{column}%
+% \end{columns}
+
+
+\end{frame}
+
+% >>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+\begin{frame}{Model fitting process}
+          \begin{itemize}
+          \item Covariance between HDL-C and TG no longer significant when accounting for BMI covarying with latent lipid factor.
+          \item Age positive covariance with lipid factor.
+          \item BMI positive covariance with lipid factor.
+          \end{itemize}
+\end{frame}
+
+
+\section{Summary}
+\subsection{Summary}
+
+\begin{frame}{Summary} 
+\Large
+            \begin{itemize}
+                \item 3-indicator latent factor can function as a parsimonious and well-fitting measure for dyslipidemia in structural equation models.
+                \item []
+                \item Important not to compare latent factor characteristics across groups by race/ethnic, time or sex status given metric measurement non-invariance.
+            \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+
+Contact information: vonholle at unc dot edu
+
+Further project information: https://avonholle.github.io/cfa-lipids/
+
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,169 @@
+---
+title: "Statistical Analysis Plan (SAP): Multivariate lipid distribution differences across time and race/ethnic groups: United States, 2003-2012"
+author: "Ann Von Holle"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+bibliography: lit.bib
+output:
+  html_document:
+    toc: yes 
+    toc_float: yes
+    number_sections: true
+---
+
+<!-- NOTES:
+1. This is the source document for this project. I will treat this document as a plain text Markdown file to create Word docs, pdfs and html files. This document will be downloaded in plain text format so any formatting such as bullet points, font changes, bolding, header choices will not be saved. However, please add comments or edits as you see fit. I can clean up later.
+
+2. Any text below preceded by an @ symbol is a placeholder for a citation.
+
+3. To indicate formatting in plain text use the following notation.
+Sections in this document start with a # symbol. Section 1 headings start with #, section 2 headings start with ##, etc..
+**bold**
+*italic*
+$latex formula$
+
+4. If you want to see what the text below looks like after formatting, you can cut and paste in https://stackedit.io/editor OR you can go to the web page with a recent version of updates in html format: html format or Word .docx format.
+
+5. Used google code at following link to create heading numbering: http://stackoverflow.com/questions/12389088/google-docs-drive-number-the-headings
+
+6. Can edit this file at https://docs.google.com/document/d/1UI7c676DO4_ItDheW9PGy3yBsRTh1l_EPDOGlo3sIkA/edit?usp=sharing 
+
+END OF NOTES
+-->
+
+**Version: 1**
+[Please click here for location of working draft in google docs](https://docs.google.com/document/d/1UI7c676DO4_ItDheW9PGy3yBsRTh1l_EPDOGlo3sIkA/edit?usp=sharing)
+
+Note: Borrowed format of SAP from [Pfizer](https://www.pfizer.com/files/research/research_clinical_trials/Clinical_Data_Access_Request_Sample_SAP.pdf)
+
+
+<!-- Statistical Analysis Plan
+SAP should delineate populations (exclusion criteria); end points; descriptive objectives; testable hypotheses; modifications or derivations of standard variables; statistical methods, including handling of missing data, correlated data, bias, and confounding; subgroups; interactions; and sensitivity analysis.
+-->
+
+
+# Abstract
+
+Plasma concentrations of low density lipoprotein cholesterol (LDL-C), high density lipoprotein cholesterol (HDL-C), and triglycerides (TG) are important risk factors for metabolic and cardiovascular disease c and are widely-used as targets for therapeutic intervention. A consideration of the multivariate distribution of these lipid traits could be informative in studies considering the impact of metabolic dysregulation on dyslipidemia and in studies of liver disease and the joint impact of dyslipidemia on insulin resistant states. Indeed, an understanding of the joint action of these traits has been relatively unexplored in the literature. Thus, the primary aim of this study is to determine the multivariate distribution of HDL-C, LDL-C and TG represented by racial/ethnic groups and stratified by age over five 2-year time periods (2003-2004, 2005-2006, 2007-2008, 2009-2010, 2011-2012) from NHANES. As these lipid values biologically related and statistically correlated, we first used principal component analyses (PCA) as an exploratory exercise to visually examine clustering by race in biplots. Second, we followed the PCA with tests of covariance and relative mean differences in the multivariate lipid distribution across a) calendar time and b) racial/ethnic groups (Mexican-American, non-Hispanic White, non-Hispanic Black, Other Hispanic and Other race/ethnicity). All analyses were stratified within three age groups: 12-19 years, 20 to 49 years and 50-80 years, and adjusted for age, race, sex and body mass index (BMI) when possible. Confirmatory factor analyses (CFA) allowed hypotheses tests stipulating covariance and mean relative location differences across groups using one latent factor/trait and HDL-C, LDL-C and TG serving as indicator variables for the factor. We found no evidence of covariance or relative location differences (alpha level of 0.05) across time but differences do exist across different racial/ethnic groups. In particular, covariance / relative locations differed across the five racial/ethnic groups for ages 12-19 years (p<0.0001 / p<0.0001), 20-49 years (p<0.02 / p<0.0001) and 50-80 years (p<0.003 / p<0.0001). These results suggest joint distributions of TG, HDL-C, and LDL-C vary across racial/ethnic groups. In summary, our data suggest that consideration of a multivariate distribution can provide a more nuanced portrait of dyslipidemia. One continuous latent factor representing all three lipids and their concomitant associations provides a means to characterize lipid values simultaneously and is a natural choice as an outcome when studying exposures influencing multiple lipid values, pleiotropic genetic variants being one case in point. We described distinct latent factors across racial/ethnic groups.  Limited analyses exist using this framework for lipids, and future efforts considering the joint distribution  of lipid measures may improve our understanding of the disease processes operation on metabolic dysregulation, for example in liver disease.
+
+Character Maximum Limit 2500
+Character Minimum Limit 25
+
+# Data Source
+
+[National Health and Nutrition Study](http://www.cdc.gov/nchs/nhanes/)
+Years: 2005 to 2014
+
+We will use the [nhanes-A R package](https://cran.r-project.org/web/packages/nhanesA/index.html) to obtain and download NHANES lab and demographic data sets.
+
+Data sets for TG and LDL-C: TRIGLY_D, TRIGLY_E, TRIGLY_F, TRIGLY_G, TRIGLY_H
+Data sets for HDL-C: HDL_D, HDL_E, HDL_F, HDL_G, HDL_H
+Data sets for demographic info: DEMO_D, DEMO_E, DEMO_F, DEMO_G, DEMO_H
+
+# Analysis Objectives
+
+To explore the multivariate distribution of HDL-C, LDL-C and TG we will use principal component analysis (PCA) for complex survey samples (using appropriate weights and strata) to estimate proportion explained variance, factor loadings and create biplots to visualize data.
+
+# Analysis Sets -- Populations -- Subgroups
+
+## Subgroups
+
+All analyses will be stratified by two-year groups: 2005-2006, 2007-2008, 2009-2010, 2011-2012, 2013-2014.
+
+The data sets for 1999-2000, 2001-2002, 2003-2004 are available, but use a different measurement technique for HDL-C.
+
+
+# Outcomes and Covariates
+
+## Outcome variables
+
+HDL-C (mg/dL): LBDHDD
+
+LDL-C (mg/dL): LBDLDL 
+
+TG (mg/dL): LBXTR
+Note: TG will be natural log transformed.
+
+## Covariates
+
+
+Age: RIDAGEYR
+  Age groups will be 8-17 and 18-55
+
+Gender: [RIAGENDR](http://wwwn.cdc.gov/Nchs/Nhanes/2013-2014/DEMO_H.htm#RIAGENDR)
+
+
+Racial/Ethnic Group: [RIDRETH1](https://wwwn.cdc.gov/Nchs/Nhanes/2013-2014/DEMO_H.htm#RIDRETH1])
+
+| --- | --- |
+|Code | Value |
+| 1 | Mexican American |
+| 2 | Other Hispanic |
+| 3 | Non-Hispanic White |
+| 4 | Non-Hispanic Black |
+| 5 | Other Race - Including Multi-Racial |
+| . | Missing |
+| --- | --- |
+
+Note: In 2007-2008 NHANES over-sample all Hispanics not just Mexican- Americans as before.
+
+### Cholesterol medication use
+
+Create a binary variable indicating any use of cholesterol lowering medication. We used the definition of cholesterol-lowering medication use from the NCHS data brief 177 [@quiping_prescription_2014], “Prescription medications were classified based on the three level nested therapeutic classification scheme of Cerner Multum’s Lexicon (8). Cholesterol lowering medications were identified using the secondary level of drug category codes, specifically code 19. Another prescription drug, omega-3-polyunsaturated fatty acid (brand name Lovaza or Omacor), was also considered a cholesterol-lowering medication.”
+
+[RXQ_DRUG data set](http://wwwn.cdc.gov/nchs/nhanes/1999-2000/RXQ_DRUG.htm)  contains the prescription medication info. If RXDDCI1B or RXDDCI2B or RXDDC3B or RXDDCI4B = 19 or RXDDRUG contains ‘OMEGA’ then treat as a cholesterol-lowering drug. Merge with drug data for individuals available at [rxq_rx](http://wwwn.cdc.gov/nchs/nhanes/1999-2000/RXQ_RX.htm), [rxq_rx_b](https://wwwn.cdc.gov/Nchs/Nhanes/2001-2002/RXQ_RX_B.htm) to [rxq_rx_g](http://wwwn.cdc.gov/nchs/nhanes/2011-2012/RXQ_RX_G.htm).
+
+# Handling of missing values and other data conventions
+
+If there are fewer than 10% missing data for lipid measures we will use complete cases. Otherwise I am not sure how to handle missing data with a complex survey sample and PCA.
+
+# Statistical Methodology
+
+
+## Statistical procedures
+
+First, we will create summary statistics for all five time periods with weighted marginal and joint distributions by race/ethnicity, age and gender. Descriptive sample statistics will also include time-specific three dimensional plots for the three lipid measures with and without a legend identifying racial and ethnic groups.
+
+We will use the three individual-level lipid measures to estimate proportion of variance explained for each of the three principal components. We will select the appropriate number of components to display in biplots based on the most variance explained. Biplots will be created for each year and age group combination (7 x 3 = 21 plots). In each of these plots we will use the race/ethnic groupings provided by NHANES as different colors to examine any groupings that may occur in the combined plot. We will use the biplot to examine the placement of each vector representing a lipid value for information on correlation between measures and strength of association.
+
+All of the estimates mentioned above will be compared in tables (factor loadings) and plots (biplot),
+
+Subsequent to this first analysis, a secondary analysis by year, age, and race/ethnic group will be completed to examine any difference in factor loadings and the relative importance of each lipid level within principal component (5 X 2 X 4).
+
+NOTE: restricting these analyses to the four largest racial/ethnic groups as coded in the [NHANES sample](https://wwwn.cdc.gov/Nchs/Nhanes/2013-2014/DEMO_H.htm#RIDRETH1): 1) Mexican-American, 2) Non-Hispanic White, 3) Non-Hispanic Black and 4) Other Race.
+
+
+### Secondary statistical procedures
+
+Apply nonparametric hierarchical clustering methods (R package [hclust](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/hclust.html)) to the coordinates in the first and second principal components. Start with number of clusters suggested in a mixture model (R package [mclust](https://cran.r-project.org/web/packages/mclust/vignettes/mclust.html)) via the BIC statistic.
+## Measures to adjust for multiplicity, confounders, heterogeneity
+
+These analyses are descriptive so no adjustments done for confounding. Analyses are stratified by age, time and racial/ethnic groups.
+
+# Sensitivity analyses
+
+When possible we will examine all plots stratified by gender to determine if there are differences.
+
+
+
+# Rationale for any deviation from pre-specified analysis plan
+
+If there are differences by gender in results we will stratify when the sample size is large enough.
+
+#  QC plans
+
+We will create histograms and descriptive summary statistics to examine data for any extreme values. 
+
+# Programming plans
+
+All programs will be maintained/documented in a github repository [here](https://github.com/avonholle/ms201608-2). Note that this repository is private. To access the repository please provide me with a github id and I will add you to this repository. If you do not have an id you can sign up for a free account [here](https://help.github.com/articles/signing-up-for-a-new-github-account/).
+
+We will use the ‘survey’ package in R to calculate principal component analyses (PCA). The **svyprcomp** function in this package accounts for the complex sample survey design in estimating scores.
+Preliminary results can be found [here](https://avonholle.github.io/ms201608-2/).
+
+
+
+# Appendix
+
+
+# References
+

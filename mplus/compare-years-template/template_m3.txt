@@ -1,0 +1,143 @@
+[[init]]
+iterators = agecut group sex;
+
+agecut = 2:4;
+group = 1:3;
+sex = 1;
+
+bmisd#agecut = 6.0 6.9 6.3;
+agesd#agecut = 2.3 8.6 8.2;
+
+agecutnames#agecut = "12to19" "20to50" "50to80";
+groupnames#group = "year" "race" "sex";
+
+datanames#sex = "totdatlong.dat" ;
+sexnames#sex = "all";
+
+filename = "m3-agegrp-[[agecutnames#agecut]]-groups-[[groupnames#group]]-sex-[[sexnames#sex]]-CFA.inp";
+
+outputDirectory = "C:/temp/models2";
+[[/init]]
+
+
+TITLE: complex cfa nhanes lipids adjust for age, meds and gender -- 
+    time trend across groups no correlation between groups
+    and factor loadings and intercepts equal for each year.
+     modl 3: Scalar invariance. age: [[agecutnames#agecut]]
+     group: [[groupnames#group]];
+
+DATA: FILE = [[datanames#sex]];
+
+VARIABLE: 
+NAMES = seqn tg ldl hdl ridreth1 age gender wtmec2yr sdmvpsu sdmvstra chol_med year
+     race rn id white tg2 ldl2 hdl2 tg3 ldl3 hdl3 lbxtr lbdldl lbdhdd age_cut  mec10yr bmi male; 
+MISSING=.;
+
+[[group=1]]
+USEVARIABLES ARE tg ldl hdl age bmi;
+GROUPING is year (  2003 = y2003
+                    2005 = y2005 2007 = y2007 2009 = y2009
+                    2011 = y2011); ! See example 5.27
+[[/group=1]]                    
+
+[[group=2]]
+USEVARIABLES ARE tg ldl hdl age bmi;
+GROUPING is race (  1 = MA 2 = OH 3 = NHW 4 = NHB 5 = OTH); ! See example 5.27
+[[/group=2]]
+
+[[group=3]]
+USEVARIABLES ARE tg ldl hdl age bmi;
+GROUPING is male (1 = Male 0 = Female); ! See example 5.27
+[[/group=3]]
+
+useobservations = age_cut == [[agecut]] and chol_med==0 and year>2001;
+
+stratification = sdmvstra;
+cluster = seqn;
+weight = mec10yr;
+analysis: 
+type = complex; 
+iterations = 5000;
+
+model:
+    f1 by tg* hdl ldl;
+    f1@1; [f1@0];
+    
+    tg@0.6 ! have to fix tg or get negative resid var. skew?
+    ldl with hdl;
+    !tg with hdl (cov1); # note: not sig with age and bmi;
+    
+    age@4; [age@15]; ! set residual variance to simplify model;
+    agef by age;
+    bmi@28; [bmi@24];
+    bmif by bmi;
+    
+    bmif with agef (cov2);
+    agef with f1 (cov3);
+    bmif with f1 (cov4);
+    
+    tg (tgvar);
+  
+  model constraint:
+      0 < tgvar;      
+!      cov2 = 2.5;
+!      cov3 = 0.3;
+!      cov4 = 3.7;    
+
+[[group=1]]
+      
+ model y2003:
+      [tg@0];
+      [hdl@0];
+      [ldl@0];
+  model y2005:
+      [tg@0];
+      [hdl@0];
+      [ldl@0];
+  model y2007:
+      [tg@0];
+      [hdl@0];
+      [ldl@0];
+  model y2009:
+      [tg@0];
+      [hdl@0];
+      [ldl@0];
+  model y2011:
+      [tg@0];
+      [hdl@0];
+      [ldl@0];
+[[/group=1]]  
+
+[[group=2]]
+  model OH:
+      [tg@0];
+      [hdl@0];
+      [ldl@0];
+  model NHW:
+      [tg@0];
+      [hdl@0];
+      [ldl@0];
+  model NHB:
+      [tg@0];
+      [hdl@0];
+      [ldl@0];
+  model OTH:
+      [tg@0];
+      [hdl@0];
+      [ldl@0];
+
+[[/group=2]]
+
+[[group=3]]
+  model Male:
+      [tg@0];
+      [hdl@0];
+      [ldl@0];
+  model Female:
+      [tg@0];
+      [hdl@0];
+      [ldl@0];
+[[/group=3]]
+
+OUTPUT: 
+    standardized;

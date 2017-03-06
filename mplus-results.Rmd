@@ -1,0 +1,913 @@
+---
+title: "Mplus Results"
+author: "Ann Von Holle"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+bibliography: lit.bib
+output:
+  html_document:
+        toc: yes
+        toc_float: yes
+        number_sections: true
+---
+
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}  
+
+library(knitr)
+opts_chunk$set(fig.width=10, fig.height=10, 
+               fig.keep = 'all',
+               fig.align="left", 
+               echo=F, results='hide',
+               warning=FALSE, message=FALSE, comment=NA)
+
+library("MplusAutomation")
+library(data.table)
+library(plyr)
+
+library(ztable)
+options(ztable.type="html")
+#options(ztable.type="viewer") # for debugging ztable
+
+```
+
+
+```{r, eval=FALSE}
+# generate data to read in to Mplus
+  read_chunk("export-mplus.R")
+```
+
+```{r}
+# Look at some descriptive statistics in data
+
+load("alldat.Rda") # get appended data (all.dat.df) from export-mplus.R
+summary(all.dat.df)
+
+# get parameters to set in mplus file templates for variance of bmi and age
+
+# mean, sd bmi
+with(all.dat.df, {
+  c(mean(bmi, na.rm=T),
+    sd(bmi, na.rm=T),
+    mean(age, na.rm=T),
+    sd(age, na.rm=T))})
+
+table(all.dat.df$age.cut)
+
+# get mean bmi and age by age cut groups
+all.dt = data.table(all.dat.df[c("bmi", "age", "age.cut")])
+all.dt[, sapply(.SD, function(x) list(mean=mean(x, na.rm=T), 
+                                      sd=sd(x, na.rm=T))), 
+       by=age.cut]
+
+```
+
+<!-- Make the models from an MplusAutomate template -->
+
+```{r}
+
+# Models comparing racial/ethnic groups and time (years)
+
+# Each template iterates across age groups and groupings (year and race)
+# terms from model come from "A checklist for testing measurement invariance",
+# doi: 10.1080/17405629.2012.686740
+# ----------------------------------------------------------------
+
+# Template for Model 1: metric invariance. 
+createModels('C:/Users/vonholle/Dropbox/unc.grad.school/my-papers/ms-201608-2/programs-ms201608-2/mplus/compare-years-template/template_m1.txt')
+
+# Template for Model 2: Intercept only invariance
+createModels('C:/Users/vonholle/Dropbox/unc.grad.school/my-papers/ms-201608-2/programs-ms201608-2/mplus/compare-years-template/template_m2.txt')
+
+# Template for Model 3: Scalar invariance
+createModels('C:/Users/vonholle/Dropbox/unc.grad.school/my-papers/ms-201608-2/programs-ms201608-2/mplus/compare-years-template/template_m3.txt')
+
+# Template for Model 4: Full uniqueness invariance
+createModels('C:/Users/vonholle/Dropbox/unc.grad.school/my-papers/ms-201608-2/programs-ms201608-2/mplus/compare-years-template/template_m4.txt')
+
+# NOTE: after creating the models go to virtuallab and run them in MPlus. Details below.cc
+```
+
+```{r}
+
+# Models comparing gender groups 
+
+# Each template iterates across age groups 
+
+# terms from model come from "A checklist for testing measurement invariance",
+# doi: 10.1080/17405629.2012.686740
+# ----------------------------------------------------------------
+
+# Template for Model 1: metric invariance. 
+createModels('C:/Users/vonholle/Dropbox/unc.grad.school/my-papers/ms-201608-2/programs-ms201608-2/mplus/compare-years-template/template_m1_sex.txt')
+
+# Template for Model 2: Intercept only invariance
+createModels('C:/Users/vonholle/Dropbox/unc.grad.school/my-papers/ms-201608-2/programs-ms201608-2/mplus/compare-years-template/template_m2_sex.txt')
+
+# Template for Model 3: Scalar invariance
+createModels('C:/Users/vonholle/Dropbox/unc.grad.school/my-papers/ms-201608-2/programs-ms201608-2/mplus/compare-years-template/template_m3_sex.txt')
+
+
+# Template for Model 4: Full uniqueness invariance
+createModels('C:/Users/vonholle/Dropbox/unc.grad.school/my-papers/ms-201608-2/programs-ms201608-2/mplus/compare-years-template/template_m4_sex.txt')
+
+```
+
+<!-- Run models created from template.
+    Notes:
+    1. I originally worked out all the problems in files for individual models/groups and age groups in folder titled, 
+    ~\Dropbox\unc.grad.school\my-papers\ms-201608-2\programs-ms201608-2\mplus\archive\ 
+    2. this won't run for the virtual lab Mplus. trying to figure out the command line to run mplus 
+-->
+
+
+```{r, eval=FALSE}
+
+# -----------------------------------
+# Note: I was able to run batches of Mplus files from the virtuallab.unc.edu server
+# after emailing tech support 9/23/2016. A special version of R on virtuallab
+# was set up for me to be able to call Mplus in virtuallab. was able to run
+# all 28 models in less than 5 minutes after that. 
+
+# Contents of run-models.R program below (but note that it has to be run in R while in virtuallab.unc.edu). Before running run-models.R I run the chunk of code above to get the .inp files on my local folder (c:\temp\models\). then I copy those .inp files to the c:\temp\models folder. next I copy and paste the c:\temp\models\ folder on my local computer to my temporary folder in virtuallab.unc.edu server using their version of windows explorer and typing "%userprofile%". this pulls up my temporary server folder that R in virutal lab can locate. I also copy and paste the totdatlong.dat file made in 'export-mplus.R' (also in c:\temp\models\ folder) to the c:\users\vonholle\virtual-lab\ folder (or whatever you name it to in the virtual lab desktop, could be c:\users\vonholle\temp) to folder holding my programs in virtuallab.unc.edu. Then I run the run-models.R program and it should create .out files in the c:\users\vonholle\virtual-lab\ folder. Then I copy and paste those .out files back to my local drive (at ~\Dropbox\unc.grad.school\my-papers\ms-201608-2\programs-ms201608-2\mplus\compare-years-template) so I can run the rest of this .Rmd file.
+# -----------------------------------
+
+# install.packages("MplusAutomation")
+# library(MplusAutomation)
+# 
+# runModels("C:\\Users\\vonholle\\temp") 
+          
+```
+
+
+<!-- Extract results from mplus output, .out 
+ See https://cran.r-project.org/web/packages/MplusAutomation/vignettes/Vignette.pdf
+-->
+
+```{r read1, cache=F}
+
+# read in results for differences across years (all ages) and racial/ethnic groups
+# NOTE: I have to move the files from c:\temp\models\ to the folder specified below
+
+# extract out all parameters from output
+amp.years.params <- extractModelParameters("C:/temp/models2", recursive=F)
+warnings() # not sure why there are some problems reading in data -- missing values?
+
+#NOTE: be careful with the recursive setting. will get repeats that mess up tables below.
+
+
+ayp = amp.years.params # save a backup because it takes so long to run
+names.ayp = names(ayp)
+
+# extract out model fit summaries from output
+amp.years.sums <- extractModelSummaries("C:/Users/vonholle/Dropbox/unc.grad.school/my-papers/ms-201608-2/programs-ms201608-2/mplus/compare-years-template", recursive=T)
+names(amp.years.sums)
+```
+
+```{r data-handle1}
+
+# check names of objects in list
+names(amp.years.params) # names too long, simplify
+
+nms = names.ayp
+
+gender.g = ifelse(grepl("sex.all.", nms)==T, 'all',
+                  ifelse(grepl("sex.fem.", nms)==T, 'female',
+                         ifelse(grepl("sex.mal.", nms)==T, 'male', 
+                                ifelse(grepl("groups.gender", nms)==T, 'gen', NA))))
+table(gender.g) # check
+
+ageg = ifelse(grepl("12to19",nms)==T, "12to19",
+              ifelse(grepl("20to50",nms)==T,"20to50",
+                     ifelse(grepl("50to80",nms)==T, "50to80", NA)))
+
+table(ageg) #check
+
+gps = ifelse(grepl("groups.year",nms)==T, "YR",
+             ifelse(grepl("groups.race", nms)==T, "RE",
+                    ifelse(grepl("groups.gender", nms)==T, "GE", NA)))
+table(gps)
+
+model = ifelse(grepl(".m1", nms)==T, 1,
+               ifelse(grepl(".m2", nms)==T, 2,
+                      ifelse(grepl(".m3", nms)==T, 3,
+                             ifelse(grepl(".m4", nms)==T, 4, NA))))
+table(model)
+
+names(amp.years.params) = paste0("m", model, "y", ageg, "g", gps, "gender", gender.g)
+names(amp.years.params) #check
+head(amp.years.params)
+```
+
+
+```{r data-handle2}
+# --------------------------------------------
+# PREP model fit info
+# --------------------------------------------
+
+head(amp.years.sums)
+
+# add descriptors to model fit data
+
+amp.years.sums$gender.g = with(amp.years.sums, {
+  ifelse(grepl("-all-", Filename)==T, 'all',
+                  ifelse(grepl("-female-", Filename)==T, 'female',
+                         ifelse(grepl("-male-", Filename)==T, 'male', NA)))
+})
+
+table(amp.years.sums$gender.g) # check
+
+amp.years.sums$agegrp = with(amp.years.sums, {
+  ifelse(grepl("12to19",Filename)==T, "12to19",
+                                 ifelse(grepl("20to50",Filename)==T,"20to50",
+                                        ifelse(grepl("50to80",Filename)==T, "50to80", NA)))
+})
+table(amp.years.sums$agegrp)
+
+amp.years.sums$group = with(amp.years.sums, {
+  ifelse(grepl("groups.year",nms)==T, "YR",
+             ifelse(grepl("groups.race", nms)==T, "RE",
+                    ifelse(grepl("groups.gender", nms)==T, "GE", NA)))
+})
+
+table(amp.years.sums$group)
+names(amp.years.sums)
+
+amp.years.sums$model = with(amp.years.sums, {
+  ifelse(grepl("m1-", Filename)==T, 1,
+               ifelse(grepl("m2-", Filename)==T, 2,
+                      ifelse(grepl("m3-", Filename)==T, 3,
+                             ifelse(grepl("m4-", Filename)==T, 4, NA))))
+})
+
+table(amp.years.sums$model)
+
+# Get columns to print off table below
+names(amp.years.sums)
+head(amp.years.sums)
+fit.vals = c("Filename",
+             "ChiSqM_Value", "ChiSqM_DF", "ChiSqM_PValue", 
+             "LL",
+             "CFI", "TLI", "RMSEA_Estimate",
+             "BIC", "AIC", "gender.g", "agegrp", "group", "model")
+
+fit.vals.renamed = c("Chi-sq", "df", "p-value", "LL",
+                     "CFI", "TLI",
+                     "BIC", "AIC", "RMSEA", "Model", "Gender", "Age", "Groups", "mod")
+
+amp.years.sums.sub = amp.years.sums[,colnames(amp.years.sums) %in% fit.vals]
+colnames(amp.years.sums.sub) = fit.vals.renamed
+
+head(amp.years.sums.sub) #check
+
+# make a model description to describe model invariance settings as described in
+# van de Schoot R, Lugtig P, Hox J. A checklist for testing measurement invariance. European Journal of Developmental Psychology. 2012 Jul;9(4):486–92. 
+
+amp.years.sums.sub = within(amp.years.sums.sub, {
+  description = ifelse(grepl("m1", Model)==T, "M1: Metric invariance: diff int",
+                       ifelse(grepl("m2", Model)==T, "M2: Diff factor loadings",
+                              ifelse(grepl("m3", Model)==T, "M3: Scalar Invariance: eq loading and eq int",
+                                     ifelse(grepl("m4", Model)==T, "M4: Full Uniqueness invariance: eq loadings, intercepts and res variance",
+                                            ifelse(grepl("m5", Model)==T, "M5: Free loadings, int and res variance",
+                                                   NA)))))
+})
+
+table(amp.years.sums.sub$Groups)
+
+order = amp.years.sums.sub[order(amp.years.sums.sub$Age,
+                         amp.years.sums.sub$Groups,
+                         amp.years.sums.sub$description),]
+
+  mod.1 = order[order$Gender=="all" & order$Groups %in% c("RE", "YR"), !(colnames(order) %in% c("Model"))]
+  table(mod.1$Groups)
+  head(mod.1)
+  
+  mod.1f = order[order$Gender=="female"& order$Groups %in% c("RE", "YR"),
+                 !(colnames(order) %in% c("Model"))]
+  head(mod.1f)
+  table(mod.1f$Groups)
+  
+  mod.1m = order[order$Gender=="male"& order$Groups %in% c("RE", "YR"),
+                 !(colnames(order) %in% c("Model"))]
+  head(mod.1m)
+  
+  mod.ge = order[order$Groups %in% c("GE"), !(colnames(order) %in% c("Model"))]
+  head(mod.ge)
+  
+  mod.1.tot = rbind(mod.1[complete.cases(mod.1$df),], 
+                    mod.ge) #includes gender groups (in addition to race/ethnic and year groups)
+  
+  
+  table(mod.1.tot$Groups)
+  mod.1.tot = mod.1.tot[order(mod.1.tot$Groups, mod.1.tot$Age, mod.1.tot$description),]
+  mod.1.tot[1:10,]
+
+```
+
+
+# Model fit results for pooled gender
+
+Note: All factors were adjusted for age and bmi (in the year comparisons).
+
+```{r fit1}
+
+  col.include = c("mod", "Chi-sq", "df", "p-value",
+                  "LL", "CFI", "TLI", "BIC", "AIC", "RMSEA",
+                  "description")
+  mod.2 = mod.1.tot[col.include]
+  mod.2$mod = as.integer(mod.1.tot$mod)
+  colnames(mod.2)[1] = "Model"
+  head(mod.2)
+  
+  z = ztable(mod.2, zebra=4, zebra.color="pastelgray")
+
+  # Add row labels
+  rowlabs = with(mod.1.tot, {
+    unique(paste0("Age: ", Age, ". Groups:", Groups))
+  })
+  rowlabs
+    
+    rowlabs.n = with(mod.1.tot, {
+    table(paste0("Age: ", Age, ". Groups:", Groups))
+  })
+  
+
+  z = addrgroup(z, rgroup = rowlabs, n.rgroup = rowlabs.n)
+  z = update_ztable(z, include.rownames=F, 
+                    caption="Model Fit Information")
+```
+
+```{r, results='asis'}
+z
+
+```
+
+
+# Test model fit
+
+Use nested chi-square tests to compare models 1 to 3 (some form of variance across groups) to model 4(complete invariance across groups) [@van_de_schoot_checklist_2012]
+
+* **Model 1**. metric invariance: Factor loadings are eq across groups but int differ across groups (metric invariance)
+* **Model 2**. Intercept only invariance: factor loadings are different but interceptes are eq across groups
+* **Model 3**. Scalar invariance: Same factor loadings and same intercepts for underlying items
+* **Model 4**. Full uniqueness invariance: equal loadings and intercept. Also equal variance across all groups
+
+Separate models were run for groupings: RE = racial/ethnic groups, YE = years (2003-2004, 2005-2006, 2007-2008, 2009-2010, 2011-2012)
+
+
+
+```{r}
+
+# reshape data with chi-sq values for each model in columns by types of model (age and grouping combos)
+head(order)
+
+get.pvals = function(df1) {
+  #df1=mod.1.tot
+  df1 = df1[complete.cases(df1$df),]
+  table(df1$Groups)
+  nrow(df1)
+  head(df1)
+  df1
+  
+  
+  chi = dcast(setDT(df1), Age + Groups ~ mod, 
+                        value.var = "Chi-sq")
+  
+  colnames(chi)[3:6] = c("m1", "m2", "m3", "m4")
+  chi
+  
+  df = dcast(setDT(df1), Age + Groups ~ mod, 
+                        value.var = "df")
+  
+  colnames(df)[3:6] = c("m1", "m2", "m3", "m4")
+  df
+  
+  # get diff in chi sq for model 4 vs 3, 2 and 1
+  chi = within(chi, {
+    diff.4.vs.1 = m4-m1
+    diff.4.vs.2 = m4-m2
+    diff.4.vs.3 = m3-m4
+  })
+  
+  chi
+  
+  # get diff in chi sq for model 4 vs 3, 2 and 1
+  df = within(df, {
+    df.4.vs.1 = m4-m1
+    df.4.vs.2 = m4-m2
+    df.4.vs.3 = m3-m4
+  })
+  
+  df = data.frame(df)
+  chi = data.frame(chi)
+  
+  both.vals = cbind(chi[c("Age", "Groups",
+                          "diff.4.vs.1",
+                          "diff.4.vs.2",
+                          "diff.4.vs.3")],
+                    df[c("df.4.vs.1",
+                         "df.4.vs.2",
+                         "df.4.vs.3")])
+  
+  both.vals
+  
+  # These models are nested so use difference in chi-sq tests to determine if 
+  # any changes are statistically different from the full uniqueness invariance model (model 4)
+  both.vals = within(both.vals, {
+    pval.m1 = round(pchisq(diff.4.vs.1, df.4.vs.1, lower.tail=F),4)
+    pval.m2 = round(pchisq(diff.4.vs.2, df.4.vs.2, lower.tail=F),4)
+    pval.m3 = round(pchisq(diff.4.vs.3, df.4.vs.3, lower.tail=F),4)
+  })
+  
+  return(both.vals)
+}
+
+bv = get.pvals(mod.1.tot)
+
+bv.m = get.pvals(mod.1m)
+bv.f = get.pvals(mod.1f)
+
+```
+
+
+```{r}
+
+make.z.tests = function(df.vals, type){
+  #df.vals is the data frame
+  #type is the type of labeling for the final table
+  
+  cgroups = c( "", 
+                          "Chi sq diff",
+                          "df",
+                          "p-value"
+                          )
+  
+  
+  both.vals.2 = df.vals[, !(colnames(df.vals) %in% c("Age"))]
+  colnames(both.vals.2)
+  both.vals.2 = both.vals.2[c("Groups", "diff.4.vs.1", "diff.4.vs.2", "diff.4.vs.3",
+                              "df.4.vs.1", "df.4.vs.2", "df.4.vs.3",
+                              "pval.m1", "pval.m2", "pval.m3")] # reorder order of columns
+  colnames(both.vals.2) # check
+  
+  colnames(both.vals.2) = c("Groups", rep(c("Model 1 vs 4", "Model 2 vs 4", "Model 3 vs 4"),3))
+  
+  n.cgroup = c(1,3,3,3)
+  z=ztable(both.vals.2, zebra=0, zebra.color="pastelgray")
+  z = addcgroup(z, cgroup=cgroups, n.cgroup=n.cgroup)
+  
+  rgroup = c("12 to 19 years", "20 to 50 years", "50 to 80 years")
+  if(type==1) {n.rgroup = c(rep(3,3))
+                  z = addrgroup(z, rgroup = rgroup, n.rgroup = n.rgroup)}
+  
+  if(type==2) {n.rgroup2 = c(rep(2,3))
+                z = addrgroup(z, rgroup = rgroup, n.rgroup = n.rgroup2)
+  }
+  
+
+  
+  z = update_ztable(z, include.rownames=F,
+                    caption="Model fit tests",
+                    zebra=2,
+                    digits = c(0,0,rep(1,3), rep(0,3), rep(4,3))); #z
+}
+
+z.all = make.z.tests(bv, type=1)
+z.f = make.z.tests(bv.f, type=2)
+z.m = make.z.tests(bv.m, type=2)
+
+```
+
+## Both genders
+
+**NOTE**: 
+
+* GE = gender groups
+
+* RE = racial/ethnic groups
+
+* YR = year groups
+
+
+```{r, results='asis'}
+  z.all
+```
+
+## Females
+
+**NOTE**: 
+
+* GE = gender groups
+
+* RE = racial/ethnic groups
+
+* YR = year groups
+
+
+```{r, results='asis'}
+  z.f
+```
+
+## Males
+
+
+**NOTE**: 
+
+* GE = gender groups
+
+* RE = racial/ethnic groups
+
+* YR = year groups
+
+
+```{r, results='asis'}
+  z.m
+```
+
+# Model parameters for all models
+
+## Standardized factor loadings by age group, grouping (RE=race/ethnicity and YE=years) and model
+
+
+```{r}
+
+# YEARS
+names(amp.years.params)
+
+
+# pick off the standardized estimates, stdyx.standardized (3rd element in each list)
+# and put in table for all models
+names(amp.years.params)  # amp.years.params is a list of lists containing parameters from many different parts of the output for each model, indexed by model.
+names(amp.years.params[[1]]$stdyx.standardized) # 7 columns
+nrow(amp.years.params[[1]]$stdyx.standardized) # 130 rows
+amp.years.params[[1]]$stdyx.standardized
+
+
+# take out the standardized analysis from each of the model output (3rd element from each list, stdyx.standardized)
+#res3 = do.call(rbind.data.frame, sapply(amp.years.params, function(x) x[3]))
+#res3$names = rownames(res3)
+
+
+res3 = rbindlist(sapply(amp.years.params, function(x) x[3]), 
+                 use.names=TRUE, fill=TRUE, idcol="names")
+
+head(res3)
+
+
+# extract out model info (age and group)
+#age.group = unlist(strsplit(rownames(res3), "[.]"))
+res3$model = substr(res3$names,1,2)
+res3$age.group = substr(res3$names,4,9)
+res3$grouping = substr(res3$names,11,12)
+res3$gender = substr(res3$names, 19, 21)
+
+table(res3$model); table(res3$age.group); table(res3$grouping);
+table(res3$gender)
+head(res3[res3$Group=="FEMALE",])
+
+
+# make a new value to put in table: est (se)
+res3 = within(res3, {
+  est.se = paste0(est, " (", se, ")")
+})
+head(res3$est.se)
+
+
+# Look at factor loadings by model
+
+fl = res3[res3$paramHeader %in% c("F1.BY"),]
+nrow(fl) # 1065 rows
+head(fl)
+
+
+t1 = data.frame(dcast(setDT(fl[fl$gender %in% c("all", "gen"),]), 
+                      age.group + grouping + model + Group ~ param, 
+                      value.var = "est.se"))
+
+colnames(t1)[1:4] = c("Age", "Grouping", "Model", "Group value")
+head(t1)
+table(t1$"Group value")
+
+
+# females
+t1f = data.frame(dcast(setDT(fl[fl$gender=="fem",]), age.group + grouping + model + Group ~ param, 
+                      value.var = "est.se"))
+colnames(t1f)[1:4] = c("Age", "Grouping", "Model", "Group value")
+head(t1f)
+
+# males
+t1m = data.frame(dcast(setDT(fl[fl$gender=="mal",]), age.group + grouping + model + Group ~ param, 
+                      value.var = "est.se"))
+colnames(t1m)[1:4] = c("Age", "Grouping", "Model", "Group value")
+head(t1m)
+
+
+```
+
+
+```{r}
+# function to make standardized estimates in a z table
+
+make.stdest = function(dat){
+#dat=t1
+  col.include = c("Group value", "HDL2", "LDL2", "TG2")
+  col.names = c("Group", "HDL", "LDL", "TG")
+  head(t1)
+  dat.2 = dat[col.include]
+  colnames(dat.2) = col.names
+  head(dat.2)
+  
+  z = ztable(dat.2, zebra=0, zebra.color="pastelgray")
+  
+  # Add row labels
+  rowlabs = with(dat, {
+    unique(paste0("Age: ", Age, ". Groups:", Grouping, ". Model: ", substr(Model,2,3)))
+  })
+  rowlabs
+  
+      
+  rowlabs.n = with(dat, {
+    table(paste0("Age: ", Age, ". Groups:", Grouping, ". Model: ", substr(Model,2,3)))
+  })
+
+  
+  z = addrgroup(z, rgroup = rowlabs, n.rgroup = rowlabs.n)
+  z = update_ztable(z, include.rownames=F, 
+                    caption="Factor Loadings (se)", 
+                    zebra=2)
+  return(z)
+}
+
+z = make.stdest(t1)
+zm = make.stdest(t1m)
+zf = make.stdest(t1f)
+
+#  z
+```
+
+## Pooled gender
+
+**NOTE**: 
+
+* GE = gender groups
+
+* RE = racial/ethnic groups
+
+* YR = year groups
+
+
+```{r, results='asis'}
+z
+```
+
+## Females
+
+**NOTE**: 
+
+* GE = gender groups
+
+* RE = racial/ethnic groups
+
+* YR = year groups
+
+
+```{r, results='asis'}
+zf
+```
+
+
+## Males
+
+**NOTE**: 
+
+* GE = gender groups
+
+* RE = racial/ethnic groups
+
+* YR = year groups
+
+
+```{r, results='asis'}
+zm
+```
+
+
+-------
+
+
+## Standardized residual variance by age group, grouping (RE=race/ethnicity and YE=years) and model
+
+```{r}
+resid = res3[res3$paramHeader %in% c("Residual.Variances"),]
+nrow(resid)
+head(resid)
+
+t2 = data.frame(dcast(setDT(resid[resid$gender %in% c("all", "gen"),]), 
+                      age.group + grouping + model + Group ~ param, 
+                      value.var = "est.se"))
+colnames(t2)[1:4] = c("Age", "Grouping", "Model", "Group value")
+t2
+
+# females
+t2f = data.frame(dcast(setDT(resid[resid$gender=="fem",]), age.group + grouping + model + Group ~ param, 
+                      value.var = "est.se"))
+colnames(t2f)[1:4] = c("Age", "Grouping", "Model", "Group value")
+
+# males
+t2m = data.frame(dcast(setDT(resid[resid$gender=="mal",]), age.group + grouping + model + Group ~ param, 
+                      value.var = "est.se"))
+colnames(t2m)[1:4] = c("Age", "Grouping", "Model", "Group value")
+
+```
+
+
+
+```{r}
+
+# function to make z table of standardized residuals
+makestdres = function(dat) {
+  #dat=t2
+  head(dat)
+  col.include = c("Grouping", "HDL2", "LDL2", "TG2")
+  col.names = c("Group", "HDL", "LDL", "TG")
+  dat.2 = dat[col.include]
+  colnames(dat.2) = col.names
+  head(dat.2)
+  names(dat)
+  
+  z = ztable(dat.2,  zebra=0, zebra.color="pastelgray")
+
+  # Add row labels
+  rowlabs = with(dat, {
+    unique(paste0("Age: ", Age, ". Groups:", Grouping, ". Model: ", substr(Model,2,3)))
+  })
+  rowlabs
+  
+    
+    rowlabs.n = with(dat, {
+    table(paste0("Age: ", Age, ". Groups:", Grouping, ". Model: ", substr(Model,2,3)))
+  })
+
+  rgroup = rowlabs
+
+  z = addrgroup(z, rgroup=rowlabs, n.rgroup = rowlabs.n)
+  z = update_ztable(z, include.rownames=F, 
+                    caption="Standardized residual variance (se)",
+                    zebra=2)
+}
+
+z = makestdres(t2)
+z
+
+zf = makestdres(t2f)
+zm = makestdres(t2m)
+#  z
+```
+
+## Pooled gender
+
+**NOTE**: 
+
+* GE = gender groups
+
+* RE = racial/ethnic groups
+
+* YR = year groups
+
+
+```{r, results='asis'}
+z
+```
+
+## Females
+
+**NOTE**: 
+
+* GE = gender groups
+
+* RE = racial/ethnic groups
+
+* YR = year groups
+
+
+```{r, results='asis'}
+zf
+```
+
+## Males
+
+**NOTE**: 
+* GE = gender groups
+* RE = racial/ethnic groups
+* YR = year groups
+
+
+```{r, results='asis'}
+zm
+```
+----
+
+## Standardized intercepts by age group, grouping (RE=race/ethnicity and YE=years) and model
+
+```{r}
+int = res3[res3$paramHeader %in% c("Intercepts"),]
+nrow(int)
+head(int)
+
+t3 = data.frame(dcast(setDT(int[int$gender %in% c("all", "gen"),]), age.group + grouping + model + Group  ~ param, 
+                      value.var = "est.se"))
+colnames(t3)[1:4] = c("Age", "Grouping", "Model", "Group value")
+head(t3)
+
+t3f = data.frame(dcast(setDT(int[int$gender=="fem",]), age.group + grouping + model + Group  ~ param, 
+                      value.var = "est.se"))
+colnames(t3f)[1:4] = c("Age", "Grouping", "Model", "Group value")
+head(t3f)
+
+
+t3m = data.frame(dcast(setDT(int[int$gender=="mal",]), age.group + grouping + model + Group  ~ param, 
+                      value.var = "est.se"))
+colnames(t3m)[1:4] = c("Age", "Grouping", "Model", "Group value")
+head(t3m)
+
+```
+
+```{r}
+# function to show standardized intercept
+
+makeint = function(dat){
+  
+  #dat=t3
+  col.include = c("Group value", "HDL2", "LDL2", "TG2")
+  col.names = c("Group", "HDL", "LDL", "TG")
+  dat.2 = dat[col.include]
+  colnames(dat.2) = col.names
+  head(dat.2)
+  
+  z = ztable(dat.2, zebra=0, zebra.color="pastelgray")
+
+  # Add row labels
+  rowlabs = with(dat, {
+    unique(paste0("Age: ", Age, ". Groups:", Grouping, ". Model: ", substr(Model,2,3)))
+  })
+  rowlabs
+  
+    rowlabs.n = with(dat, {
+    table(paste0("Age: ", Age, ". Groups:", Grouping, ". Model: ", substr(Model,2,3)))
+  })
+  rowlabs.n
+
+  z = addrgroup(z, rgroup=rowlabs, n.rgroup = rowlabs.n)
+  z = update_ztable(z, include.rownames=F, 
+                    caption="Standardized intercepts (se)", 
+                    zebra=2)
+}
+
+z = makeint(t3)
+zf = makeint(t3f)
+zm = makeint(t3m)
+#  z
+```
+
+## Pooled gender
+
+**NOTE**: 
+
+* GE = gender groups
+
+* RE = racial/ethnic groups
+
+* YR = year groups
+
+
+```{r, results='asis'}
+z
+```
+
+## Females
+
+**NOTE**: 
+* GE = gender groups
+* RE = racial/ethnic groups
+* YR = year groups
+
+
+```{r, results='asis'}
+zf
+```
+
+## Males
+
+**NOTE**: 
+
+* GE = gender groups
+
+* RE = racial/ethnic groups
+
+* YR = year groups
+
+
+```{r, results='asis'}
+zm
+```
+
+# References
+            

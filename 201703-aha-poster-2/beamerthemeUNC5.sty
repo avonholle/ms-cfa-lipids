@@ -1,0 +1,154 @@
+\ProvidesPackage{beamerthemeUNC5}
+% I adapted this from the following info... https://gist.github.com/duncandoo/7809461
+% this style was created by Duncan McPherson, based on the I6pd2 theme
+% by Thomas Deselaers an Philippe Dreuw
+
+\selectcolormodel{cmyk}
+\mode<presentation>
+
+%%%%%%%%%%% Define Colours %%%%%%%%%%%%%%%%%%%
+% These are official NHS colours.
+% Get more information and the other colours at:
+% http://www.nhsidentity.nhs.uk/tools-and-resources/nhs-brand-basics/nhs-colours
+
+% Carolina blue from http://perrin.socsci.unc.edu/tips/
+\definecolor{carolinablue}{rgb}{0.55686,0.7294,0.898}
+% http://www.seoconsultants.com/css/colors/conversion/?pantone=278#table
+
+% NHS yellow
+\definecolor{nhsyellow}{cmyk}{0, 0, 1, 0} % #f7e214
+
+% NHS blue
+\definecolor{nhsblue}{cmyk}{1, 0.43, 0, 0}
+\definecolor{nhsdarkblue}{cmyk}{1, 0.69, 0, 0.115}
+\definecolor{nhslightblue}{cmyk}{1, 0.085, 0, 0.06}
+
+% NHS green
+\definecolor{darkgreen}{cmyk}{1, 0, 0.69, 0.43} % #006b54
+\definecolor{lightgreen}{cmyk}{0.65, 0, 1, 0} % #5bbf21
+
+% NHS orange
+\definecolor{orange}{cmyk}{0, 0.47, 1, 0} % #e28c05
+
+%%%%%%%%%%%% Put colours to use %%%%%%%%%%%%%%%%%%%%%%%
+
+\setbeamercolor{headline}{fg=white,bg=carolinablue}
+\setbeamercolor{footline}{fg=white, bg=carolinablue}
+\setbeamerfont{footline}{size=\large,series=\tt}
+\setbeamercolor{separation line}{bg=NavyBlue}
+
+%\setbeamercolor{title}{fg=nhsyellow}
+\setbeamercolor{title}{fg=black}
+\setbeamercolor{author}{fg=white}
+\setbeamercolor{institute}{fg=white}
+
+%\setbeamercolor*{normal text}{fg=white, bg=nhsdarkblue}
+\setbeamercolor*{normal text}{fg=white, bg=white}
+\setbeamercolor*{block body}{bg=carolinablue!20,fg=black}
+\setbeamerfont*{block body}{size=\large}
+\setbeamercolor*{block title}{fg=white,bg=carolinablue}
+\setbeamerfont*{block title}{size=\LARGE}
+
+%%%%%%%%%%%%%%%% Set up structures in the template %%%%%%%%%%%%%%%
+
+\setbeamertemplate{itemize items}[triangle]
+\beamertemplatenavigationsymbolsempty  % no navigation on a poster
+ 
+% CODE for body of poster here.........................%
+ 
+% The header blocks..........................................%
+% -------------------------------------------------------------%
+\setbeamertemplate{block begin}{
+  \begin{beamercolorbox}[ht=4ex, left, colsep*=.95ex]{block title}
+  \vbox to2.5ex{\vfil\hbox{\usebeamerfont*{block title}\insertblocktitle}\vfil}%
+  \end{beamercolorbox}%
+  
+  {\ifbeamercolorempty[bg]{block body}{}{\nointerlineskip\vskip-0.5pt}}%
+    \usebeamerfont{block body}%
+    \begin{beamercolorbox}[leftskip=0em, colsep*=.75ex, sep=0.25ex, vmode]{block body}%
+    \ifbeamercolorempty[bg]{block body}{\vskip-.25ex}{\vskip-.75ex}\vbox{}%
+}
+\vskip1em
+\setbeamertemplate{block end}{
+\end{beamercolorbox}
+} 
+
+
+ % CODE for title of poster here.........................
+\setbeamertemplate{headline}{
+\leavevmode
+ 
+\begin{beamercolorbox}[wd=\paperwidth]{headline}
+\begin{columns}[T]
+
+\begin{column}{0.95\paperwidth}
+\vskip10ex % this command increases the height of title box
+
+% see http://tex.stackexchange.com/questions/154970/beamer-beamerposter-line-spacing-in-title-doesnt-seem-to-work
+\setbeamerfont{title}{series=\bfseries,size=\fontsize{85}{102}}
+\setbeamerfont{author}{series=\bfseries,size=\fontsize{40}{60}}
+
+%\begin{minipage}[b][0mm][t]{.75\paperwidth}%
+    \usebeamercolor[fg]{title in headline}{%        
+        \usebeamerfont{title}{%
+            \normalbaselines%
+            \vskip-1ex % move title up a bit towards top
+            \inserttitle\centering\par%
+        }%
+    }%
+    \usebeamercolor[fg]{author in headline}{%        
+        \usebeamerfont{author}{%
+            \normalbaselines%
+            \vskip1ex % add some space between title and author list.
+            \centering\insertauthor\par%
+        }%
+    }%
+
+\end{column}
+
+
+\end{columns}
+
+\vskip4ex
+\end{beamercolorbox}
+ 
+\begin{beamercolorbox}[wd=\paperwidth]{lower separation line head}
+\rule{0pt}{3pt}
+\end{beamercolorbox}
+} 
+
+\setbeamertemplate{footline}{
+\begin{beamercolorbox}[wd=\paperwidth]{upper separation line foot}
+\rule{0pt}{3pt}
+\end{beamercolorbox}
+\leavevmode%
+\begin{beamercolorbox}[ht=4ex,leftskip=1em,rightskip=1em]{footline}%
+\textcolor{black}{\small Created with \LaTeX~\texttt{beamerposter. EPI|LIFESTYLE 2017 Scientific Sessions}}
+\hfill
+\textcolor{black}{\texttt{\hspace{1cm}\Large\insertshortauthor}}
+\includegraphics[scale=0.3]{qrcode-cfa-lipid.png}
+
+\vskip1ex%
+\end{beamercolorbox}
+\vskip0pt%
+\begin{beamercolorbox}[wd=\paperwidth]{lower separation line foot}
+\rule{0pt}{3pt}
+\end{beamercolorbox}
+} 
+
+
+\mode<all>
+
+% adapt height of imtemize rectangles
+\setbeamertemplate{itemize items}[triangle]
+\setbeamertemplate{itemize item}{\raisebox{0.12ex}{$\blacktriangleright$}\hskip0.1em}
+\setbeamertemplate{itemize subitem}{\raisebox{0.12ex}{$\triangleright$}\hskip0.1em}
+% or define your own template using \defbeamertemplate{itemize item}, see beameruserguide.pdf
+
+% equal font sizes for all levels
+\setbeamerfont{itemize/enumerate body}{size=\normalsize}
+\setbeamerfont{itemize/enumerate subbody}{size=\normalsize}
+\setbeamerfont{itemize/enumerate subsubbody}{size=\normalsize}
+
+\setbeamerfont{title}{size=\fontsize{86}{102}}
+
