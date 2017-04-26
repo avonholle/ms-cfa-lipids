@@ -23,7 +23,9 @@ Confirmatory factor analysis (CFA) of multivariate lipid distributions across ti
         - Got to remote folder and transfer the .out files to the local folder to save the Mplus output.
     - Take Mplus output and read in all output using extractModelParameters and extractModelSummaries functions in MplusAutomation in the [mplus-results.Rmd](mplus-results.Rmd) program.
     - Make tables in R with the Mplus results now in R data frame formats.
-            
-        
+    
+2. Create poster and e-poster (really slides) file
+    - [aha-2017-cfa-slides.Rnw](201703-aha-poster-2/aha-2017-cfa-slides.Rnw) -- [e-poster file](201703-aha-poster-2/aha-2017-cfa-slides.pdf)
+    - [aha-2017-cfa.Rnw](201703-aha-poster-2/aha-2017-cfa.Rnw) -- [poster file](201703-aha-poster-2/aha-2017-cfa.pdf)
         
     
