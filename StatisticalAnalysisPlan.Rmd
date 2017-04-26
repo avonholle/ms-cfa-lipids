@@ -5,7 +5,7 @@ date: '`r format(Sys.time(), "%d %B, %Y")`'
 bibliography: lit.bib
 output:
   html_document:
-    toc: yes 
+    toc: yes
     toc_float: yes
     number_sections: true
 ---
@@ -39,6 +39,8 @@ Note: Borrowed format of SAP from [Pfizer](https://www.pfizer.com/files/research
 <!-- Statistical Analysis Plan
 SAP should delineate populations (exclusion criteria); end points; descriptive objectives; testable hypotheses; modifications or derivations of standard variables; statistical methods, including handling of missing data, correlated data, bias, and confounding; subgroups; interactions; and sensitivity analysis.
 -->
+
+
 
 
 # Abstract
@@ -121,20 +123,64 @@ If there are fewer than 10% missing data for lipid measures we will use complete
 
 ## Statistical procedures
 
+### Summary statistics
+
 First, we will create summary statistics for all five time periods with weighted marginal and joint distributions by race/ethnicity, age and gender. Descriptive sample statistics will also include time-specific three dimensional plots for the three lipid measures with and without a legend identifying racial and ethnic groups.
 
-We will use the three individual-level lipid measures to estimate proportion of variance explained for each of the three principal components. We will select the appropriate number of components to display in biplots based on the most variance explained. Biplots will be created for each year and age group combination (7 x 3 = 21 plots). In each of these plots we will use the race/ethnic groupings provided by NHANES as different colors to examine any groupings that may occur in the combined plot. We will use the biplot to examine the placement of each vector representing a lipid value for information on correlation between measures and strength of association.
+### Confirmatory Factor Analysis (CFA)
 
-All of the estimates mentioned above will be compared in tables (factor loadings) and plots (biplot),
+The primary analysis is a confirmatory factor analysis. This analysis includes the three most common lipid profile measures as a construct of dyslipidemia: HDL, LDL and TG.
 
-Subsequent to this first analysis, a secondary analysis by year, age, and race/ethnic group will be completed to examine any difference in factor loadings and the relative importance of each lipid level within principal component (5 X 2 X 4).
+<img src=cfa-figure.png width="300">
+<!-- This figure was made in cfa-figure.Rnw (and exported to .png from Adobe Acrobat DC) -->
+
+\[
+\text{Equations for CFA:}
+\left\{
+\begin{array}{rcl}
+  \textrm{HDL-C} & = & \mu_1 + \lambda_1 \eta_1 + \epsilon_1 \\
+  \textrm{LDL-C} & = & \mu_2 + \lambda_2 \eta_1 + \epsilon_2 \\
+  \textrm{TG-C} & = & \mu_3 + \lambda_3 \eta_1 + \epsilon_3 \\
+\end{array}
+\right.
+\]
+
+* Fit
+To evaluate fit of all models, we will consider:
+1. Root mean square error of approximation (RMSEA)
+2. Comparitive fit index (CFI)
+3. Bayesian Information Criterion (BIC)
+
+* Groups
+The two demographic groupings we will consider are:
+1. Racial/ethnic groups as defined in NHANES.
+2. Gender groups
+
+* Estimates
+Each group will have estimates for 
+1. Factor loadings, $\lambda$
+2. Intercept, $\mu$
+3. Residual variation, $\epsilon$
+
+---
+
+## Measurement Invariance (MI)
+
+To compare this construct across groups, measurement invariance (MI) of the construct must hold. To check MI, we will conduct a sequence of model fitting [@van_de_schoot_checklist_2012]. If MI does not hold then the construct cannot be meaningfully compared across groups, such as race/ethnicity or gender.
+
+As defined in the checklist in the paper cited above by @van_de_schoot_checklist_2012, four models are fit with the same data including ones to evaluate:
+
+1. Metric invariance: test difference of factor loadings, $\lambda$.
+
+2. Equality of intercepts: test difference of intercepts, $\mu$.
+
+3. Scalar invariance: test equality of factor loadings, $\lambda$, and intercepts, $\mu$.
+
+4. Full uniqueness MI: “the explained variance is the same for every item is the same across groups.” [@van_de_schoot_checklist_2012]
 
 NOTE: restricting these analyses to the four largest racial/ethnic groups as coded in the [NHANES sample](https://wwwn.cdc.gov/Nchs/Nhanes/2013-2014/DEMO_H.htm#RIDRETH1): 1) Mexican-American, 2) Non-Hispanic White, 3) Non-Hispanic Black and 4) Other Race.
 
 
-### Secondary statistical procedures
-
-Apply nonparametric hierarchical clustering methods (R package [hclust](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/hclust.html)) to the coordinates in the first and second principal components. Start with number of clusters suggested in a mixture model (R package [mclust](https://cran.r-project.org/web/packages/mclust/vignettes/mclust.html)) via the BIC statistic.
 ## Measures to adjust for multiplicity, confounders, heterogeneity
 
 These analyses are descriptive so no adjustments done for confounding. Analyses are stratified by age, time and racial/ethnic groups.
@@ -155,15 +201,9 @@ We will create histograms and descriptive summary statistics to examine data for
 
 # Programming plans
 
-All programs will be maintained/documented in a github repository [here](https://github.com/avonholle/ms201608-2). Note that this repository is private. To access the repository please provide me with a github id and I will add you to this repository. If you do not have an id you can sign up for a free account [here](https://help.github.com/articles/signing-up-for-a-new-github-account/).
-
-We will use the ‘survey’ package in R to calculate principal component analyses (PCA). The **svyprcomp** function in this package accounts for the complex sample survey design in estimating scores.
-Preliminary results can be found [here](https://avonholle.github.io/ms201608-2/).
-
-
+All programs will be maintained/documented in a github repository [here](https://github.com/avonholle/ms-cfa-lipids).
 
 # Appendix
-
 
 # References
 
