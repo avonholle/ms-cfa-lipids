@@ -1,0 +1,48 @@
+---
+title: "Confirmatory factor analysis (CFA) of multivariate lipid distributions across time and race-ethnic groups: United States, 2003 to 2012"
+author: "Ann Von Holle, Kari E. North"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document:
+    toc: true # table of content true
+    depth: 3  # up to three depths of headings (specified by #, ## and ###)
+    number_sections: true  ## if you want number sections at each table header
+    theme: united  # many options for theme, this one is my favorite.
+    highlight: tango  # specifies the syntax highlighting style
+bibliography: lit.bib
+csl: ../../vancouver.csl
+---
+ 
+<!-- 
+NOTES:
+ 
+1. This document will be downloaded in text format so any formatting such as bullet points, font changes, bolding, header choices will not be saved. However, please add comments or edits as you see fit. I can clean up later.
+2. Any text below preceded by an @ symbol is a placeholder for a citation.
+3. To indicate formatting in plain text use the following notation.
+Sections in this document start with a # symbol. Section 1 headings start with #, section 2 headings start with ##, etc..
+**bold**
+*italic*
+$latex formula$
+4. If you want to see what the text below looks like after formatting, you can cut and paste in https://stackedit.io/editor OR you can go to the web page with a recent version of updates in Word doc format: draft
+END OF NOTES
+-->
+ 
+ 
+# Introduction
+ 
+Dyslipidemia is often characterized through measures of triglycerides, high-density lipoprotein cholesterol (HDL-C), and low-density cholesterol (LDL-C) from a common lipid panel. These measures are then analyzed in research on a univariate basis or with ratios. Another analytic approach can include confirmatory factor analysis (CFA). In practice, this approach would reduce the dimension of three indicators mentioned above to one latent variable capturing the pairwise correlation between measures. In turn, the resulting latent construct can be used either as an exposure or outcome in structural equation models. Although this sort of multivariate analysis can provide a different perspective compared to univariate and traditional approaches, it has not been investigated in the literature as a feasible analytic approach.
+ 
+CFA is useful for a set of indicators that are interrelated and have already been established in a substantive theoretical sense independent of a statistical rationale. For the three indicators of interest in this particular study: HDL-C, LDL-C, and TG, there exists a strong rationale to treat them together to represent dyslipidemia [@bays_national_2016]. Although there are other indicators of dyslipidemia, these three are the most accessible in common lipid profiles and the most reported in the literature. Any changes in these values represented by a latent factor would be recognizable to lipid researchers and of value in research. What would most likely occur is for TG and LDL-C to be positively correlated and HDL-C negatively correlated with the prior two indicators. A one unit change in the latent factor in this case could represent an increase in TG and LDL-C alongside a decrease in HDL-C given the well established correlations between these measures.
+ 
+A further motivation to examine dyslipidemia in a dimension reduction approach is to further develop the rationale behind the use of ratios when characterizing lipids. One could consider the correlations between the indicators to be an analog to ratios, with an additional ability to maintain variability for each measure. For example, the use of HDL to TG ratios is increasing in the literature, but analyses using a ratio has limitations [@kuh_correlation_1955; @atchley_ratios_1978; @kronmal_spurious_1993] including failure to adequately adjust for each of the variables forming the ratio when used as a covariate in a linear regression [@kronmal_spurious_1993].  Unlike a ratio, maintaining properties of each lipid measure is possible with a CFA latent construct and perhaps this measure can better inform analyses with this construct as either an outcome or covariate.
+ 
+Prior to implementation of this approach it is important to investigate if this latent construct represented in the CFA has a good model fit. Poor model fit would indicate that the fitted latent construct does not match the observed data very well and does not serve as a proper latent variable within a numerical dyslipidemia construct. For example, if the indicators are not correlated with one another then this approach is not feasible. Nor is it feasible if the choice of indicators do not fit within a sound theoretical basis. Neither of these cases apply to lipids used in common lipid profiles, and these two requirements make a case for examining dyslipidemia as a latent factor in CFA with the intent of using it in the future either as an exposure or outcome.
+ 
+Assuming the three measures provide a good source of model fit, a next step would be to evaluate if the form of the latent construct of dyslipidemia stays relatively constant across demographic groups. Similar form of the construct across different socio-demographic groups allows comparisons of construct means across these groups -- a basic outcome of interest. One common method used to assess this property is measurement invariance (MI) of the latent factor across demographic groups [@van_de_schoot_editorial:_2015-1]. Absent MI then comparing construct means across the demographic groups is more difficult to accomplish. An alternative approach in that resulting scenario would be to stratify analyses for make meaningful inference.
+ 
+Although the CFA requires additional knowledge of structural equation modeling, the ability to obtain a finer ability to capture correlations between lipid and lipoprotein indicators and condense it into a single latent variable can provide a parsimonious alternative approach to characterize dyslipidemia. Our aim in this study is to assess the fit and test measurement invariance of a latent construct representing dyslipidemia in a U.S.-representative sample. In turn, this assessment and tests can provide evidence of the viability of this construct in future models incorporating dyslipidemia.
+ 
+# Methods
+ 
+ 
+# Results
