@@ -1,0 +1,95 @@
+---
+title: "Confirmatory factor analysis (CFA) of multivariate lipid distributions"
+author: "Ann Von Holle, Kari E. North"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output:
+  word_document:
+    toc: yes
+  html_document:
+    csl: ama.csl
+    depth: 3
+    highlight: tango
+    number_sections: yes
+    theme: united
+    toc: yes
+csl: ama.csl
+bibliography: bib1.bib
+---
+
+<!-- 
+NOTES:
+
+1. This document will be downloaded in text format so any formatting such as bullet points, font changes, bolding, header choices will not be saved. However, please add comments or edits as you see fit. I can clean up later.
+2. Any text below preceded by an @ symbol is a placeholder for a citation.
+3. To indicate formatting in plain text use the following notation.
+Sections in this document start with a # symbol. Section 1 headings start with #, section 2 headings start with ##, etc..
+**bold**
+*italic*
+$latex formula$
+4. If you want to see what the text below looks like after formatting, you can cut and paste in https://stackedit.io/editor OR you can go to the web page with a recent version of updates in Word doc format: draft
+END OF NOTES
+-->
+
+# Abstract
+ 
+Lipids and lipoproteins found in common profiles such as LDL-C, HDL-C and TG are used to assess dyslipidemia, a well-established risk factor for CVD. These measures are commonly evaluated across socio-demographic groups in a univariate format -- one at a time. Assessing dyslipidemia as a multivariate construct is possible, and perhaps more meaningful, in the context of SEM, but no thorough assessment exists in the literature.
+
+To assess the multivariate construct, we will use confirmatory factor analysis (CFA) to form a latent factor with three commonly assessed lipids and lipoproteins including LDL-C, HDL, TG. In turn, we will assess measurement invariance (MI)  of the construct across demographic characteristics of race/ethnicity and sex in a United States representative sample of children ages 9 to 12 years.
+
+Proper model fit will guide viability of this dyslipidemia construct in analyses. If measurement invariance across racial/ethnic or gender groups exists then there would also be no evidence of differences in the construct itself across these groups and allows for comparisons in means of the construct. Also, similarities across groups also implies the measured lipid indicators have similar pair-wise correlations. Conversely, measurement variance is an indicator that this latent factor is not the same across groups and should be treated as such with stratification.
+
+Results:
+
+We were not able to find evidence of measurement invariance (MI). Tests for MI across racial/ethnic or gender groups are significant indicating that these groups have different multivariate shapes of the three lipid/lipoproteins and the means of these constructs cannot be compared across groups. Within strata of gender or race, the construct has good fit via fit statistics making it a valid construct.
+
+Conclusion:
+
+Analyses demonstrate this construct is a parsimonious way to evaluate dyslipidemia and can provide an alternate approach to treatment of dyslipidemia in structural equation models. However, evaluation of this construct across socio-demographic groups such as race/ethnicity and gender provides evidence of a different multivariate structure requiring stratification.
+
+
+# Introduction
+
+Dyslipidemia is often characterized through measures of triglycerides (TG), high-density lipoprotein cholesterol (HDL-C), and low-density cholesterol (LDL-C) from a common lipid panel. These measures are then analyzed in research on a univariate basis or with ratios. Another analytic approach can include confirmatory factor analysis (CFA). In practice, this approach would reduce the dimension of three indicators mentioned above to one latent variable capturing the pairwise correlation between measures. In turn, the resulting latent construct can be used either as an exposure or outcome in structural equation models. Although this sort of multivariate analysis can provide a different perspective compared to univariate and traditional approaches, it has not been investigated in the literature as a feasible analytic approach.
+
+CFA is useful for a set of indicators that are interrelated and have already been established in a substantive theoretical sense independent of a statistical rationale. For the three indicators of interest in this particular study: HDL-C, LDL-C, and TG, there exists a strong rationale to treat them together to represent dyslipidemia [@bays_national_2016]. Although there are other indicators of dyslipidemia, these three are the most accessible in common lipid profiles and the most reported in the literature. Any changes in these values represented by a latent factor would be recognizable to lipid researchers and of value in research. What would most likely occur is for TG and LDL-C to be positively correlated and HDL-C negatively correlated with the prior two indicators. A one unit change in the latent factor in this case could represent an increase in TG and LDL-C alongside a decrease in HDL-C given the well established correlations between these measures.
+
+A further motivation to examine dyslipidemia in a dimension reduction approach is to further develop the rationale behind the use of ratios when characterizing lipids. One could consider the correlations between the indicators to be an analog to ratios, with an additional ability to maintain variability for each measure. For example, the use of HDL to TG ratios is increasing in the literature, but analyses using a ratio has limitations [@kuh_correlation_1955; @atchley_ratios_1978; @kronmal_spurious_1993] including failure to adequately adjust for each of the variables forming the ratio when used as a covariate in a linear regression [@kronmal_spurious_1993].  Unlike a ratio, maintaining properties of each lipid measure is possible with a CFA latent construct and perhaps this measure can better inform analyses with this construct as either an outcome or covariate.
+
+Prior to implementation of this approach it is important to investigate if this latent construct represented in the CFA has a good model fit. Poor model fit would indicate that the fitted latent construct does not match the observed data very well and does not serve as a proper latent variable within a numerical dyslipidemia construct. For example, if the indicators are not correlated with one another then this approach is not feasible. Nor is it feasible if the choice of indicators do not fit within a sound theoretical basis. Neither of these cases apply to lipids used in common lipid profiles, and these two requirements make a case for examining dyslipidemia as a latent factor in CFA with the intent of using it in the future either as an exposure or outcome.
+
+Assuming the three measures provide a good source of model fit, a next step would be to evaluate if the form of the latent construct of dyslipidemia stays relatively constant across demographic groups including race/ethnicity, age and gender. Similar form of the construct across different socio-demographic groups allows comparisons of construct means across these groups -- a basic outcome of interest. One common method used to assess this property is measurement invariance (MI) of the latent factor across demographic groups [@van_de_schoot_editorial:_2015-1]. Absent MI then comparing construct means across the demographic groups is more difficult to accomplish. An alternative approach in that resulting scenario would be to stratify analyses for make meaningful inference.
+
+Although the CFA requires additional knowledge of structural equation modeling, the ability to obtain a finer ability to capture correlations between lipid and lipoprotein indicators and condense it into a single latent variable can provide a parsimonious alternative approach to characterize dyslipidemia. Our aim in this study is to assess the fit and test measurement invariance of a latent construct representing dyslipidemia in a U.S.-representative sample. In turn, this assessment and tests can provide evidence of the viability of this construct in future models incorporating dyslipidemia.
+
+# Methods
+
+National Health and Nutrition Examination Survey (NHANES) is a nationwide representative complex survey sample in the United States that assesses population health. Lipid measures are among the data collected in the physical exam [@_nhanes_2017-3]. These analyses include NHANES samples from 2003-2012, spanning ten years. TC and TG were obtained via from venous samples with enzymatic methods [@_nhanes_2017-1; @carroll_trends_2012]. HDL were were measured with a direct immunoassay method [@_nhanes_2017], LDL-C was determined from the Friedewald equation. We included children ages 12 to 19 years in the sample and further subsetted the sample to include the largest racial/ethnic groups in the sample: non-Hispanic White, non-Hispanic Black, and Mexican American. Also, those reporting taking lipid lowering medication were excluded from the sample. After these exclusions there were xx individuals in the complex survey sample.
+
+The primary aim is to create a latent construct of dyslipidemia so we conducted a CFA by specifying one latent variable, dyslipidemia, with three indicators: LDL-C, HDL-C and TG. We specified three factor loadings, one for each indicator, and 3 error variances creating a ‘just identified’ model with zero degrees of freedom [@brown_confirmatory_2015]. All variables required for complex survey sampling were used in the analyses, including the sampling weights, strata and clustering information. We used the Comparative Fit Index, (CFI), Bayesian Information Criterion (BIC) and Root Mean Square Error of Approximation (RMSEA) to select the model with best fit. BMI and age are associated with lipid levels and these two factors were allowed to covary with the latent lipid construct to improve model fit.
+
+Measurement invariance was determined by specifying 1) configural, 2) metric and 3) scalar models [@_mplus_2017; @van_de_schoot_checklist_2012]. Socioeconomic groups included age (12-13, 14-15, 16-17, 18-19), gender and racial/ethnic groups. The configural model allows the factor loadings and intercepts to vary across the groups; the metric model holds the factor loading the same across groups; the scalar model holds both the intercept and factor loadings to be the same across groups. To test differences between each of the models we used the chi-square test with a scaling correction factor. If significant, then there was evidence that the more complex model included significant terms that should remain in the model [@brown_confirmatory_2015]. If not significant then we kept the model with fewer parameters.
+
+One aspect that was not possible to incorporate into the model was the method to subset complex survey data given the sampling weights. We did sensitivity tests to determine any bias in ignoring that assumption made on the model parameter estimation and did not detect any difference in effect, considered negligible in substantive meaning.
+
+We used Mplus version [@muthen_mplus_1998] for the CFA analysis and R [@r_core_team_r:_2017] for other data handling tasks.
+
+# Results
+
+For each of the groupings, race/ethnicity and gender, we determined model fit across groups by conducting invariance tests with chi-square tests of three different models against each other. We determined the best fitting model by selecting the most parsimonious model that was no different, i.e. non-significant, from the more complex model. 
+
+When comparing gender, racial/ethnic, and age groups, the metric model, allowing intercepts to vary but fixed factor loadings, was not significantly different (Chi-Square=5.6, 2 df, p<0.06; Chi-Square=11.6, 8 df, p>0.16; Chi-Square=8.8, 4 df, p>0.06, respectively) from the configural model, which allowed both loading and intercepts to vary, indicating similarity of factor loadings. On the other hand, the scalar model, fixing both intercepts and factor loadings was different from the configural model (Chi-Square=71.1, 5 df, p<0.0001; Chi-Square=189.2, 20 df, p<0.0001; Chi-Square=86.5, 10 df, p<0.0001, respectively), indicating a difference in factor intercepts. Evidence for different factor intercepts is further supported by a significant test of the scalar versus metric model (Chi-Square=68.8, 3 df, p<0.0001; Chi-Square=198.8, 12 df, p<0.0001, Chi-Square=82.0, 6 df, p<0.0001, respectively). Thus the best fitting model across different gender, racial/ethnic, and age groups is one with similar factor loadings across the groups, but different factor intercepts. [Due to these results it is worth noting that a strict interpretation of factor means across the groups is not possible given the different intercepts. Add this part to discussion below] 
+
+
+
+Model fit information by groups is in table xx. We found xx.
+
+Parameters for the best fitting model are in table xx. We found xx.
+
+# Discussion
+
+# Conclusion
+
+
+
+
+
