@@ -1,0 +1,142 @@
+---
+title: "Mplus Results"
+author: "Ann Von Holle"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+bibliography: lit.bib
+output:
+  html_document:
+        toc: yes
+        toc_float: yes
+        number_sections: true
+---
+
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}  
+
+library(knitr)
+opts_chunk$set(fig.width=10, fig.height=10, 
+               fig.keep = 'all',
+               fig.align="left", 
+               echo=F, results='hide',
+               warning=FALSE, message=FALSE, comment=NA)
+
+library("MplusAutomation")
+library(reshape2)
+
+library(data.table)
+library(plyr)
+library(kableExtra)
+
+library(ztable)
+options(ztable.type="html")
+#options(ztable.type="viewer") # for debugging ztable
+
+```
+
+```{r}
+
+# Read in values
+# -------------------
+
+# set directiory to spot where Mplus output for configure testing is stored
+setwd("~/../Dropbox/unc.grad.school/my-papers/ms-201608-2/ms-cfa-lipids/mplus/mplus-configural testing")
+
+# Read in information from the .out files
+# read in lgmm data info 
+output = readModels()
+names(output[[1]])
+names(output[[1]]$parameters) # get names of different param output.
+
+# get fit summaries from output files
+df.sums = lapply(output, function(x) x$summaries)
+df.sums[[1]] # check
+
+# combine all model summaries across different groupings into one data frame
+combine.sums = do.call("rbind.fill", df.sums)
+head(combine.sums)
+
+# make a unique id
+combine.sums$id.model = rep(paste0(names(output)),
+                              sapply(output, function(x) 
+                                nrow(data.frame(x$summaries))))
+table(combine.sums$id.model) # check
+
+# Make identifying information for the parameters
+handle1 = function(dat) {
+dat = within(dat, {
+      # set up labels for outcome and sex of child groups (for facetting below)
+   groups = ifelse(grepl("groups.age", id.model)==T, "Age",
+                 ifelse(grepl(".groups.re.", id.model)==T, "Race/Ethnicity", 
+                        ifelse(grepl(".groups.sex.", id.model)==T, "Gender",
+                               ifelse(grepl(".groups.year.", id.model)==T, "Time", NA))))
+    })
+}
+
+combine.sums = handle1(combine.sums)
+table(combine.sums$groups) # check
+
+# --------------------------------------------------
+# --------------------------------------------------
+
+# get parameters from output files -- for metric models 
+# -------------------------------------------------------
+# TO DO: need to get standardized estimates
+df.params = lapply(output, function(x) data.frame(x$parameters$unstandardized$METRIC.MODEL))
+nrow(df.params[[2]])
+
+# Combine all param info across different groupsings into one data frame
+combine.params = do.call("rbind.fill", df.params)
+nrow(combine.params)
+
+# make a unique id
+combine.params$id.model = rep(paste0(names(output)),
+                              sapply(output, function(x) 
+                                nrow(data.frame(x$parameters$unstandardized$METRIC.MODEL))))
+table(combine.params$id.model)
+
+combine.params = handle1(combine.params)
+table(combine.params$groups) # check
+
+```
+
+
+```{r}
+
+# make a table of fit statistics
+names(combine.sums)
+class(combine.sums)
+
+fits = c("ChiSqM_Value", "ChiSqM_DF",
+         "LL", "CFI", "aBIC", "RMSEA_Estimate")
+
+sums.dt = data.table(combine.sums)
+wide.fit <- data.table::dcast(sums.dt[sums.dt$Model=="METRIC MODEL", with=T],
+                  groups ~ Model , 
+                  value.var = fits)
+
+wide.fit
+
+```
+
+```{r, results='markup'}
+
+#dim(wide.fit)
+wide.fit2 = wide.fit
+colnames(wide.fit2) = c(rep(c(""),7))
+
+kable(wide.fit2, 
+      booktabs=T,
+      format="html",
+      caption='Goodness of fit') %>%
+    kable_styling(bootstrap_options = c("striped")) %>%
+  add_header_above(c("Groups"=1,
+                     "Chi-Square"=1,
+                     "DF"=1,
+                     "LL"=1,
+                     "CFI"=1,
+                     "aBIC"=1,
+                     "RMSEA"=1)) #%>%
+  # group_rows("Weight", 1, 7) %>%
+  # group_rows("Height", 8, 14) %>%
+  # group_rows("WFL", 15, 21)
+
+```
