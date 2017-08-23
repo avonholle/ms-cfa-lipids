@@ -37,7 +37,7 @@ options(ztable.type="html")
 # Read in values
 # -------------------
 
-# set directiory to spot where Mplus output for configure testing is stored
+# set directiory to spot where Mplus output for configural testing is stored
 setwd("~/../Dropbox/unc.grad.school/my-papers/ms-201608-2/ms-cfa-lipids/mplus/mplus-configural testing")
 
 # Read in information from the .out files
@@ -62,7 +62,7 @@ combine.sums$id.model = rep(paste0(names(output)),
                                 nrow(data.frame(x$summaries))))
 table(combine.sums$id.model) # check
 
-# Make identifying information for the parameters
+# Make identifying information for the summaries
 handle1 = function(dat) {
 dat = within(dat, {
       # set up labels for outcome and sex of child groups (for facetting below)
@@ -75,60 +75,6 @@ dat = within(dat, {
 
 combine.sums = handle1(combine.sums)
 table(combine.sums$groups) # check
-
-# --------------------------------------------------
-# --------------------------------------------------
-
-# get parameters from output files -- for metric models 
-# -------------------------------------------------------
-# TO DO: need to get standardized estimates
-df.params = lapply(output, function(x) data.frame(x$parameters$unstandardized$METRIC.MODEL))
-nrow(df.params[[2]])
-df.params[[1]]
-
-
-# Combine all param info across different groupsings into one data frame
-combine.params = do.call("rbind.fill", df.params)
-nrow(combine.params)
-
-# make a unique id
-combine.params$id.model = rep(paste0(names(output)),
-                              sapply(output, function(x) 
-                                nrow(data.frame(x$parameters$unstandardized$METRIC.MODEL))))
-table(combine.params$id.model)
-
-# Need to figure out a way to add the groups for each of there unique combos of 
-# paramHeader and param.
-# order of groups: age (3), re (5), sex (2) and year (5)
-
-# note that the f1.by values are duplicated are the same for factor loadings
-# because they are held constant across groups.
-# for age: 1 = 12-13 2 = 14-16 3 = 17-19
-# for race/ethnicity:  1 = MA 2 = OH 3 = NHW 4 = NHB 5 = OTH
-# for sex of child: 1 = male 0 = female
-# for year: 2003 = y2003 2005 = y2005 2007 = y2007 2009 = y2009 2011 = y2011
-
-names(output)
-
-names(combine.params)
-table(combine.params$unstandardized.Group)
-nrow(combine.params)
-head(combine.params)
-
-length(unique(paste0(combine.params$unstandardized.paramHeader, 
-                     combine.params$unstandardized.param)))
-
-
-combine.params$group = rep(paste0(names(output)),
-                              sapply(output, function(x) 
-                                nrow(data.frame(x$parameters$unstandardized$METRIC.MODEL))))
-
-combine.params = handle1(combine.params)
-table(combine.params$groups) # check
-
-nrow(combine.params[combine.params$groups=="Age",])
-
-
 ```
 
 
@@ -150,11 +96,13 @@ wide.fit
 
 ```
 
-```{r, results='markup'}
+## Model fit statistics
+
+```{r fit, results='markup'}
 
 #dim(wide.fit)
 wide.fit2 = wide.fit
-wide.fit2$Model = factor(wide.fit2$Model, 
+wide.fit2$Model = factor(wide.fit2$Model,
                          labels=c("Configural",
                                   "Metric",
                                   "Scalar"))
@@ -174,17 +122,84 @@ kable(wide.fit2[,-1],
 
 ```{r}
 
-# make a table of parameters
-names(combine.params)
-head(combine.params$groups)
+# Read in parameter estimates
+# ----------------------------
 
-sums.dt = data.table(combine.sums)
-wide.params <- data.table::dcast(setDT(combine.params),
-                  groups +  unstandardized.Group + unstandardized.paramHeader + unstandardized.param  ~ .,
-                  value.var = c("unstandardized.est"))
+# set directiory to spot where Mplus output for metric standardized param estimates are
+setwd("~/../Dropbox/unc.grad.school/my-papers/ms-201608-2/ms-cfa-lipids/mplus/mplus-configural testing/no-test")
+
+# Read in information from the .out files
+# read in lgmm data info 
+output.p = readModels()
+names(output.p[[1]])
+names(output.p[[1]]$parameters) # get names of different param output.
+```
+
+
+
+```{r}
+
+# --------------------------------------------------
+# --------------------------------------------------
+
+# get parameters from output files -- for metric models 
+# -------------------------------------------------------
+
+df.params = lapply(output.p, function(x) {
+  data.frame(x$parameters$stdyx.standardized)
+} )
+
+nrow(df.params[[2]])
+df.params[[1]]
+
+
+# Combine all param info across different groupsings into one data frame
+combine.params = do.call("rbind.fill", df.params)
+nrow(combine.params)
+names(output.p)
+
+# make a unique id
+combine.params$id.model = rep(paste0(names(output.p)),
+                              sapply(output.p, function(x) 
+                                nrow(data.frame(x$parameters))))
+table(combine.params$id.model)
+
+# Need to figure out a way to add the groups for each of there unique combos of 
+# paramHeader and param.
+# order of groups: age (3), re (5), sex (2) and year (5)
 
 # note that the f1.by values are duplicated are the same for factor loadings
 # because they are held constant across groups.
+# for age: 1 = 12-13 2 = 14-16 3 = 17-19
+# for race/ethnicity:  1 = MA 2 = OH 3 = NHW 4 = NHB 5 = OTH
+# for sex of child: 1 = male 0 = female
+# for year: 2003 = y2003 2005 = y2005 2007 = y2007 2009 = y2009 2011 = y2011
+
+combine.params = handle1(combine.params)
+table(combine.params$groups) # check
+
+
+```
+
+
+```{r}
+
+# make a table of parameters
+head(combine.params)
+
+names(combine.params)
+head(combine.params$groups)
+
+wide.params <- data.table::dcast(setDT(combine.params[combine.params$paramHeader=="Intercepts",]),
+                  groups + Group  ~ param,
+                  value.var = c("est"))
+
+# standardized factor loadings
+wide.params.f <- data.table::dcast(setDT(combine.params[combine.params$paramHeader=="F1.BY",]),
+                  groups + Group  ~ param,
+                  value.var = c("est"))
+
+# groups:
 # for age: 1 = 12-13 2 = 14-16 3 = 17-19
 # for race/ethnicity:  1 = MA 2 = OH 3 = NHW 4 = NHB 5 = OTH
 # for sex of child: 1 = male 0=female
@@ -196,18 +211,34 @@ num.rows.p = table(wide.params$groups)
 num.rows.p
 num.rows.p.c = cumsum(num.rows.p)
 
-sub.wide.p = wide.params[wide.params$unstandardized.paramHeader=="Intercepts", ]
-num.rows.p.c = cumsum(table(sub.wide.p$groups))
 
 
 ```
 
-```{r, results='markup'}
+## Standardized Intercepts
 
-kable(wide.params[wide.params$unstandardized.paramHeader=="Intercepts", -1], 
+```{r int, results='markup'}
+
+kable(wide.params[, -1], 
       booktabs=T,
       format="html",
-      caption='Goodness of fit') %>%
+      caption='Standardized Intercepts') %>%
+    kable_styling(bootstrap_options = c("striped")) %>%
+  group_rows("Age", 1, num.rows.p[1]) %>%
+  group_rows("Gender", num.rows.p.c[1]+1, num.rows.p.c[2]) %>%
+  group_rows("Race/Ethnicity", num.rows.p.c[2]+1, num.rows.p.c[3]) %>%
+  group_rows("Time", num.rows.p.c[3]+1, num.rows.p.c[4])
+
+```
+
+# Standardized Factor Loadings
+
+```{r factorload}
+
+kable(wide.params.f[, -1], 
+      booktabs=T,
+      format="html",
+      caption='Standardized Intercepts') %>%
     kable_styling(bootstrap_options = c("striped")) %>%
   group_rows("Age", 1, num.rows.p[1]) %>%
   group_rows("Gender", num.rows.p.c[1]+1, num.rows.p.c[2]) %>%

@@ -1,19 +1,17 @@
 ---
-title: "Confirmatory factor analysis (CFA) of multivariate lipid distributions"
+title: Confirmatory factor analysis (CFA) of multivariate lipid distributions across time and race-ethnic groups -- United States, 2003 to 2012
 author: "Ann Von Holle, Kari E. North"
 date: '`r format(Sys.time(), "%d %B, %Y")`'
-output:
-  word_document:
-    toc: yes
+output: 
   html_document:
+    toc: true # table of content true
+    depth: 3  # up to three depths of headings (specified by #, ## and ###)
+    number_sections: true  ## if you want number sections at each table header
+    theme: united  # many options for theme, this one is my favorite.
+    highlight: tango  # specifies the syntax highlighting style
     csl: ama.csl
-    depth: 3
-    highlight: tango
-    number_sections: yes
-    theme: united
-    toc: yes
-csl: ama.csl
 bibliography: bib1.bib
+csl: ama.csl
 ---
 
 <!-- 
@@ -65,7 +63,7 @@ Although the CFA requires additional knowledge of structural equation modeling, 
 
 National Health and Nutrition Examination Survey (NHANES) is a nationwide representative complex survey sample in the United States that assesses population health. Lipid measures are among the data collected in the physical exam [@_nhanes_2017-3]. These analyses include NHANES samples from 2003-2012, spanning ten years. TC and TG were obtained via from venous samples with enzymatic methods [@_nhanes_2017-1; @carroll_trends_2012]. HDL were were measured with a direct immunoassay method [@_nhanes_2017], LDL-C was determined from the Friedewald equation. We included children ages 12 to 19 years in the sample and further subsetted the sample to include the largest racial/ethnic groups in the sample: non-Hispanic White, non-Hispanic Black, and Mexican American. Also, those reporting taking lipid lowering medication were excluded from the sample. After these exclusions there were xx individuals in the complex survey sample.
 
-The primary aim is to create a latent construct of dyslipidemia so we conducted a CFA by specifying one latent variable, dyslipidemia, with three indicators: LDL-C, HDL-C and TG. We specified three factor loadings, one for each indicator, and 3 error variances creating a ‘just identified’ model with zero degrees of freedom [@brown_confirmatory_2015]. All variables required for complex survey sampling were used in the analyses, including the sampling weights, strata and clustering information. We used the Comparative Fit Index, (CFI), Bayesian Information Criterion (BIC) and Root Mean Square Error of Approximation (RMSEA) to select the model with best fit. BMI and age are associated with lipid levels and these two factors were allowed to covary with the latent lipid construct to improve model fit.
+The primary aim is to create a latent construct of dyslipidemia so we conducted a CFA by specifying one latent variable, dyslipidemia, with three indicators: LDL-C, HDL-C and TG. We specified three factor loadings, one for each indicator, and 3 error variances creating a ‘just identified’ model with zero degrees of freedom [@brown_confirmatory_2015]. All variables required for complex survey sampling were used in the analyses, including the sampling weights, strata and clustering information. We used the Comparative Fit Index, (CFI), adjusted Bayesian Information Criterion (aBIC) and Root Mean Square Error of Approximation (RMSEA) to select the model with best fit. BMI and age are associated with lipid levels and these two factors were allowed to covary with the latent lipid construct to improve model fit.
 
 Measurement invariance was determined by specifying 1) configural, 2) metric and 3) scalar models [@_mplus_2017; @van_de_schoot_checklist_2012]. Socioeconomic groups included age (12-13, 14-15, 16-17, 18-19), gender and racial/ethnic groups. The configural model allows the factor loadings and intercepts to vary across the groups; the metric model holds the factor loading the same across groups; the scalar model holds both the intercept and factor loadings to be the same across groups. To test differences between each of the models we used the chi-square test with a scaling correction factor. If significant, then there was evidence that the more complex model included significant terms that should remain in the model [@brown_confirmatory_2015]. If not significant then we kept the model with fewer parameters.
 
@@ -75,21 +73,30 @@ We used Mplus version [@muthen_mplus_1998] for the CFA analysis and R [@r_core_t
 
 # Results
 
-For each of the groupings, race/ethnicity and gender, we determined model fit across groups by conducting invariance tests with chi-square tests of three different models against each other. We determined the best fitting model by selecting the most parsimonious model that was no different, i.e. non-significant, from the more complex model. 
+For each of the groupings, race/ethnicity and gender, we determined model fit across groups by conducting invariance tests with chi-square tests of three different models against each other. We determined the best fitting model by selecting the most parsimonious model that was no different, i.e. non-significant, from the more complex model.
 
-When comparing gender, racial/ethnic, and age groups, the metric model, allowing intercepts to vary but fixed factor loadings, was not significantly different (Chi-Square=5.6, 2 df, p<0.06; Chi-Square=11.6, 8 df, p>0.16; Chi-Square=8.8, 4 df, p>0.06, respectively) from the configural model, which allowed both loading and intercepts to vary, indicating similarity of factor loadings. On the other hand, the scalar model, fixing both intercepts and factor loadings was different from the configural model (Chi-Square=71.1, 5 df, p<0.0001; Chi-Square=189.2, 20 df, p<0.0001; Chi-Square=86.5, 10 df, p<0.0001, respectively), indicating a difference in factor intercepts. Evidence for different factor intercepts is further supported by a significant test of the scalar versus metric model (Chi-Square=68.8, 3 df, p<0.0001; Chi-Square=198.8, 12 df, p<0.0001, Chi-Square=82.0, 6 df, p<0.0001, respectively). Thus the best fitting model across different gender, racial/ethnic, and age groups is one with similar factor loadings across the groups, but different factor intercepts. [Due to these results it is worth noting that a strict interpretation of factor means across the groups is not possible given the different intercepts. Add this part to discussion below] 
+When comparing gender, racial/ethnic, and age groups, the metric model, allowing intercepts to vary but fixed factor loadings, was not significantly different (Chi-Square=5.6, 2 df, p<0.06; Chi-Square=11.6, 8 df, p>0.16; Chi-Square=8.8, 4 df, p>0.06, respectively) from the configural model, which allowed both loading and intercepts to vary, indicating similarity of factor loadings. On the other hand, the scalar model, fixing both intercepts and factor loadings was different from the configural model (Chi-Square=71.1, 5 df, p<0.0001; Chi-Square=189.2, 20 df, p<0.0001; Chi-Square=86.5, 10 df, p<0.0001, respectively), indicating a difference in factor intercepts. Evidence for different factor intercepts is further supported by a significant test of the scalar versus metric model (Chi-Square=68.8, 3 df, p<0.0001; Chi-Square=198.8, 12 df, p<0.0001, Chi-Square=82.0, 6 df, p<0.0001, respectively). Thus the best fitting model across different gender, racial/ethnic, and age groups is one with similar factor loadings across the groups, but different factor intercepts -- the metric model. [Due to these results it is worth noting that a strict interpretation of factor means across the groups is not possible given the different intercepts. Add this part to discussion below] 
 
 
 
-Model fit information by groups is in table xx. We found xx.
+Model fit information (Table 1) was satisfactory for the analyses by gender, racial/ethnic and age groups. First, RMSEA was below 0.04 in all three cases. Second, CFI was above 0.98. Third, aBIC was lowest for the metric model for all three models with the exception of the gender groups, and in this scenario, the difference between the configural and metric model was less than 4 points, considered to be a negligible difference. All of these measures of model fit point towards the metric model having satisfactory model fit and useful for further exploration of the model parameters.
 
-Parameters for the best fitting model are in table xx. We found xx.
+Parameters of interest for the best fitting model are the intercepts since they are the ones that are allowed to vary across groups in the metric specification of the model. In table 2, the intercepts for the confirmatory factor representing dyslipidemia are described by groups within each separate model. Within the model that separates by age, the three older age groups appear to have shift in the center of the factor in the negative direction for HDL, with standardized intercept resting at -0.163 for the 14 to 16 and 17 to 19 year age groups. For the middle age group, ages 14 to 16, LDL and TG are shifted further to the negative direction and the 17 to 19 year old group are shifted more in the positive direction when compared to the youngest age group 12 to 13 years of age.
+
+When examining the model with gender groups, the males appear to have a shift in the negative direction for HDL and towards a higher value of TG compared to females. Finally, the racial/ethnic groups also have differences in their intercepts. Using the Mexican American (MA) group as a referent, the non-Hispanic Blacks (NHB) have a center for the three-dimensional factor that is shifted more towards a higher HDL and LDL along with a lower TG. The non-Hispanic White group does not appear to have as large a difference as the NHB group. The other Hispanic (OH) group appears to have a larger negative shift in LDL and TG as well as the “Other” racial/ethnic group displaying characteristics similar to the NHB but not as extreme.
+
+Finally, factor loadings are not allowed to vary across groups in the metric model. Factor loadings indicate the degree to which the measured correlation between the indicators are correlated with the dyslipidemia factor. TG has the strongest correlation with the factor, at a correlation exceeding 0.71. HDL has the second strongest association -- this time a negative one -- around -0.52. Finally, LDL is the least correlated with the factor with a correlation at 0.39 for this sample. Any standardized factor loading below 0.3 indicates need to remove that indicator, and none of the lipid indicators fit that description. These values culminate in a factor indicating that a one unit increase in the factor translates to adverse levels of lipids with a decline in HDL and increases in TG and LDL.
+
 
 # Discussion
+
 
 # Conclusion
 
 
+# Tables
 
+```{r chi, child='../mplus-results-manuscript.Rmd'}
 
+```
 
