@@ -231,9 +231,10 @@ kable(wide.params[, -1],
 
 ```
 
-# Standardized Factor Loadings
+
 
 ```{r factorload}
+# Standardized Factor Loadings
 
 kable(wide.params.f[, -1], 
       booktabs=T,
