@@ -1,19 +1,17 @@
 ---
-title: Confirmatory factor analysis (CFA) of multivariate lipid distributions across
-  time and race-ethnic groups -- United States, 2003 to 2012
+title: "Confirmatory factor analysis (CFA) of multivariate lipid distributions across time and race-ethnic groups\\: United States 2003-2012"
 author: "Ann Von Holle, Kari E. North"
-date: '`r format(Sys.time(), "%d %B, %Y")`'
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
+  word_document:
+    toc: yes
   html_document:
+    csl: ama.csl
     css: style.css
     depth: 3
     highlight: tango
     number_sections: yes
     theme: readable
-    toc: yes
-  pdf_document:
-    toc: yes
-  word_document:
     toc: yes
 csl: ama.csl
 bibliography: bib1.bib
@@ -37,7 +35,7 @@ END OF NOTES
  
 Dyslipidemia, a well-established risk factor for CVD, incorporates lipids and lipoproteins found in common profiles such as LDL-C, HDL-C and TG. These measures are commonly evaluated across socio-demographic groups in a univariate format -- one at a time. Assessing dyslipidemia as a multivariate construct is possible, and perhaps also meaningful, in the context of confirmatory factor analysis (CFA), but no thorough assessment exists in the literature.
 
-To assess the multivariate construct, we will use CFA to form a latent factor with three commonly assessed lipids and lipoproteins including LDL-C, HDL, TG. In turn, we will assess measurement invariance (MI)  of the construct across demographic characteristics of race/ethnicity and sex in a United States representative sample of children ages 9 to 12 years.
+To assess the multivariate construct, we will use CFA to form a latent factor with three commonly assessed lipids and lipoproteins including LDL-C, HDL, TG. In turn, we will assess measurement invariance (MI)  of the construct across demographic characteristics of age, race/ethnicity and sex in a United States representative sample of children ages 12 to 19 years.
 
 Proper model fit will guide suitability of these indicators for dyslipidemia construct in analyses. If measurement invariance across racial/ethnic or gender groups exists then there would also be no evidence of differences in the construct itself across these groups and allows for comparisons in means of the construct. Also, similarities across groups also implies the measured lipid indicators have similar pair-wise correlations. Conversely, measurement variance is an indicator that this latent factor is not the same across groups and should be treated as such with stratification.
 
@@ -68,7 +66,7 @@ Although the CFA requires additional knowledge of structural equation modeling, 
 
 National Health and Nutrition Examination Survey (NHANES) is a nationwide representative complex survey sample in the United States that assesses population health. Lipid measures are among the data collected in the physical exam [@_nhanes_2017-3]. These analyses include NHANES samples from 2003-2012, spanning ten years. TC and TG were obtained via from venous samples with enzymatic methods [@_nhanes_2017-1; @carroll_trends_2012]. HDL were were measured with a direct immunoassay method [@_nhanes_2017], LDL-C was determined from the Friedewald equation. We included children ages 12 to 19 years in the sample and further subsetted the sample to include the largest racial/ethnic groups in the sample: non-Hispanic White, non-Hispanic Black, and Mexican American. Also, those reporting taking lipid lowering medication were excluded from the sample. After these exclusions there were xx individuals in the complex survey sample.
 
-The primary aim is to create a latent construct of dyslipidemia. We conducted a CFA by specifying one latent variable, dyslipidemia, with three indicators: LDL-C, HDL-C and TG. We specified three factor loadings, one for each indicator, and 3 error variances creating a ‘just identified’ model with zero degrees of freedom [@brown_confirmatory_2015]. All variables required for complex survey sampling were used in the analyses, including the sampling weights, strata and clustering information. We used the Comparative Fit Index, (CFI), adjusted Bayesian Information Criterion (aBIC) and Root Mean Square Error of Approximation (RMSEA) to select the model with best fit. BMI and age are associated with lipid levels and these two factors were allowed to covary with the latent lipid construct to improve model fit.
+The primary aim is to create a latent construct of dyslipidemia. We conducted a CFA by specifying one latent variable, dyslipidemia, with three indicators: LDL-C, HDL-C and TG. We specified three factor loadings, one for each indicator, and 3 error variances creating a ‘just identified’ model with zero degrees of freedom [@brown_confirmatory_2015]. All variables required for complex survey sampling were used in the analyses, including the sampling weights, strata and clustering information. We used the Comparative Fit Index, (CFI), adjusted Bayesian Information Criterion (aBIC) and Root Mean Square Error of Approximation (RMSEA) to select the model with best fit.
 
 Measurement invariance was determined by specifying 1) configural, 2) metric and 3) scalar models [@_mplus_2017; @van_de_schoot_checklist_2012]. Socioeconomic groups included age (12-13, 14-15, 16-17, 18-19), gender and racial/ethnic groups. The configural model allows the factor loadings and intercepts to vary across the groups; the metric model holds the factor loading the same across groups; the scalar model holds both the intercept and factor loadings to be the same across groups. To test differences between each of the models we used the chi-square test with a scaling correction factor. If significant, then there was evidence that the more complex model included significant terms that should remain in the model [@brown_confirmatory_2015]. If not significant then we kept the model with fewer parameters.
 
@@ -92,13 +90,13 @@ Finally, factor loadings are not allowed to vary across groups in the metric mod
 
 # Discussion
 
-The purpose of this paper was to examine the use of CFA as a measure of dyslipidemia. First, we evaluated measures of model fit of a CFA with three common lipid measures serving as observed indicators in the model: HDL-C, LDL-C and TG. Nested within this aim is the concept that this CFA dyslipidemia construct may not be similar across sociodemographic groups such as race/ethnicity and age -- common ground for comparisons. Given known differences in the factor across these demographic categories, we tested this latter hypothesis through the measurement invariance (MI) concept. MI did not hold for different racial/ethnic nor to age groups indicating that the factor means can not be meaningfully compared across these groups, which has implications for future use.
+The purpose of this paper was to examine the use of CFA as a measure of dyslipidemia. First, we evaluated measures of model fit of a CFA with three common lipid measures serving as observed indicators in the model: HDL-C, LDL-C and TG. Nested within this aim is the concept that this CFA dyslipidemia construct may not be similar across sociodemographic groups such as race/ethnicity and age -- common ground for comparisons. Given known differences in the factor across these demographic categories, we tested this latter hypothesis through the measurement invariance (MI) concept. MI did not hold for different racial/ethnic, age or gender groups indicating that the factor means can not be meaningfully compared across these groups, which has implications for future use.
 
 ## Measurement Invariance
 
 In evaluating the three different types of models across subgroups for each of the following domains: age, race/ethnicity and sex of child, the metric model was the best of the three for all domains. The configural model, in which all factor loadings and means of the dyslipidemia factor were allowed to vary across groups, was not statistically significantly different from the metric model. Given this result, the metric model offers a parsimonious fit by fixing the factor loadings to be the same across groups. Furthermore, the metric model was different from the scalar model, adding more evidence to support the choice of the metric model.
 
-Testing of measurement invariance may have intriguing implications. First, there is no evidence for differences in factor loadings across any subgroups of for race/ethnicity, gender and age. This finding supports the idea of a universal system in which the three lipid indicators interact no matter the choice of sociodemographic subgroup. Confounding may play less of a part in this explanation than that for the adult population as exposure to smoking and lifestyle choices has had less time to exact a cumulative toll. Also, a similarity of factor loadings across subgroups may have relevance for lipid ratio measures such as HDL to TG, a commonly used metric. For example, a dyslipidemia factor with positive HDL-C factor loadings combined with negative LDL-C and TG factor loadings translates to a simultaneous increase of HDL and decrease in LDL-C and TG. In turn this factor interpretation could be an analog to HDL-C to TG ratio changes, implying  generalizability of these ratios across sociodemographic subgroups. No research has been done comparing these measures and would be of interest.
+Testing of measurement invariance may have intriguing implications. First, there is no evidence for differences in factor loadings across any subgroups of for race/ethnicity, gender and age. This finding supports the idea of a universal system in which the three lipid indicators covary similarly no matter the choice of sociodemographic subgroup. Confounding may play less of a part in this explanation than that for the adult population as exposure to smoking and lifestyle choices has had less time to exact a cumulative toll. Also, a similarity of factor loadings across subgroups may have relevance for lipid ratio measures such as HDL to TG, a commonly used metric. For example, a dyslipidemia factor with positive HDL-C factor loadings combined with negative LDL-C and TG factor loadings translates to a simultaneous increase of HDL and decrease in LDL-C and TG. In turn this factor interpretation could be an analog to HDL-C to TG ratio changes, implying  generalizability of these ratios across sociodemographic subgroups. No research has been done comparing these measures and would be of interest.
 
 Although the factor loadings for the construct are similar, we did not find evidence that metric invariance holds for these subgroups. Metric non-invariance implies at least one group has a different response to the lipid latent construct [@van_de_schoot_checklist_2012]. For example, when the factor is equal to zero for all subgroups, the estimated mean indicator (HDL-C, LDL-C and TG), the intercept, is different depending on the subgroup you choose. These multivariate findings, especially of the African American group having lower TG and higher HDL supports prior findings of univariate mean differences across racial/ethnic groups [@sumner_ethnic_2009; @kit_prevalence_2015].
 
@@ -110,7 +108,7 @@ Finally, having chosen the metric model for all of the three domains, we determi
 
 Strengths of these analyses include the representation of the 12 to 19 year old population in the United States. Limitations include the possibility of a nonlinear association between these lipid indicators, which a CFA does not account for and may represent a mis-specified model. [need to add more to this section]
 
-Measuring dyslipidemia as one joint distribution that incorporates the correlation between each of three commonly measured lipids is worthwhile either as an outcome or exposure in research. Lipids do not function independently of one another and a measure addressing their covariance is an asset. CFA leverages this characteristic of these measures to form a measure with different meaning from univariate indicators. Combining the observed correlations between the three common lipids alongside their common presentation in the literature and theoretical basis for dyslipidemia further justifies the use of CFA. 
+Measuring dyslipidemia as one joint distribution that incorporates the correlation between each of three commonly measured lipids is worthwhile either as an outcome or exposure in research. In a biologic sense, lipids do not function independently of one another and an analytic measure addressing their covariance is an asset. CFA leverages this characteristic of these measures to form a measure with different meaning from univariate indicators. Combining the observed correlations between the three common lipids alongside their common presentation in the literature and theoretical basis for dyslipidemia further justifies the use of CFA. 
 
 Dyslipidemia as a multivariate construct can be an adjunct measure to univariate measures of lipids, which provides a means to assess the degree to which one measure increases as another measure either increase or decreases on a population level. Aside from the important caveat of measurement non-invariance, this work demonstrates the degree to which HDL-C, LDL-C and TG are correlated with one another on a population level. In turn this correlation can provide meaningful interpretation with other factors in downstream analyses.
 
