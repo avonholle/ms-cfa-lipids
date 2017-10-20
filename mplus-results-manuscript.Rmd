@@ -2,12 +2,16 @@
 title: "Mplus Results"
 author: "Ann Von Holle"
 date: '`r format(Sys.time(), "%d %B, %Y")`'
-bibliography: lit.bib
 output:
   html_document:
-        toc: yes
-        toc_float: yes
-        number_sections: true
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+bibliography: lit.bib
 ---
 
 ```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}  
