@@ -1,8 +1,10 @@
 ---
-title: 'Confirmatory factor analysis (CFA) of multivariate lipid distributions across time and race-ethnic groups\: United States 2003\-2012'
+title: "Confirmatory factor analysis (CFA) of multivariate lipid distributions across time and race-ethnic groups: United States, 2003-2012"
 author: "Ann Von Holle, Kari E. North"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:
+  word_document:
+    toc: yes
   html_document:
     csl: ama.csl
     css: style.css
@@ -10,8 +12,6 @@ output:
     highlight: tango
     number_sections: yes
     theme: readable
-    toc: yes
-  word_document:
     toc: yes
 csl: ama.csl
 bibliography: bib1.bib
@@ -45,7 +45,7 @@ Measurement invariance (MI) did not hold in this sample. Tests for MI across rac
 
 Conclusion:
 
-Analyses demonstrate this construct is a alternate way to evaluate dyslipidemia using structural equation models. However, evaluation of this construct across socio-demographic groups such as race/ethnicity and gender provides evidence of a different multivariate structure requiring stratification.
+Analyses demonstrate this construct is an alternate way to evaluate dyslipidemia using structural equation models. However, evaluation of this construct across socio-demographic groups such as race/ethnicity and gender provides evidence of a different multivariate structure requiring stratification.
 
 # Introduction
 
